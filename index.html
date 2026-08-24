@@ -27,9 +27,16 @@
       align-items: center;
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
+   .logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 55px;
+  width: auto;
+  display: block;
+}
     }
 
     .logo span {
@@ -175,7 +182,10 @@
 <body>
 
 <header>
-  <div class="logo"><span>HBA</span> TRANSPORT</div>
+ <div class="logo">
+  <img src="logo.webp" alt="HBA Transport Logo">
+</div>
+
 
   <nav>
     <a href="#">Home</a>
