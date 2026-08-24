@@ -257,6 +257,87 @@ background:
 <footer>
   © 2026 Ayoub Yousfi. All Rights Reserved.
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+  const supabaseUrl = "YOUR_PROJECT_URL";
+  const supabaseKey = "YOUR_PUBLISHABLE_KEY";
+
+  const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+  const trackingInput = document.getElementById("trackingNumber");
+  const trackButton = document.getElementById("trackButton");
+  const trackingResult = document.getElementById("trackingResult");
+
+  async function trackShipment() {
+    const trackingNumber = trackingInput.value.trim();
+
+    if (!trackingNumber) {
+      trackingResult.innerHTML =
+        '<p style="color:red; margin-top:15px;">Please enter a tracking number.</p>';
+      return;
+    }
+
+    trackButton.disabled = true;
+    trackButton.textContent = "SEARCHING...";
+
+    const { data, error } = await db.rpc("track_shipment", {
+      p_tracking_number: trackingNumber
+    });
+
+    trackButton.disabled = false;
+    trackButton.textContent = "TRACK";
+
+    if (error) {
+      console.error(error);
+      trackingResult.innerHTML =
+        '<p style="color:red; margin-top:15px;">Unable to track shipment. Please try again.</p>';
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      trackingResult.innerHTML =
+        '<p style="color:red; margin-top:15px;">Tracking number not found.</p>';
+      return;
+    }
+
+    const shipment = data[0];
+
+    trackingResult.innerHTML = `
+      <div style="
+        margin-top:20px;
+        text-align:left;
+        color:#222;
+        background:#f7f7f7;
+        padding:20px;
+        border-radius:8px;
+      ">
+        <h3 style="color:#f58220; margin-bottom:15px;">
+          ${shipment.tracking_number}
+        </h3>
+
+        <p><strong>Status:</strong> ${shipment.status || "-"}</p>
+        <p><strong>Origin:</strong> ${shipment.origin || "-"}</p>
+        <p><strong>Destination:</strong> ${shipment.destination || "-"}</p>
+        <p><strong>Current Location:</strong> ${shipment.current_location || "-"}</p>
+        <p><strong>Truck Number:</strong> ${shipment.truck_number || "-"}</p>
+        <p><strong>ETA:</strong> ${shipment.eta || "-"}</p>
+        <p><strong>Last Update:</strong> ${
+          shipment.last_update
+            ? new Date(shipment.last_update).toLocaleString()
+            : "-"
+        }</p>
+      </div>
+    `;
+  }
+
+  trackButton.addEventListener("click", trackShipment);
+
+  trackingInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      trackShipment();
+    }
+  });
+</script>
 </body>
 </html>
