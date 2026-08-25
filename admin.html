@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBA Admin Login</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 14px;
+      padding: 35px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+      border-top: 6px solid #f58220;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo h1 {
+      color: #111;
+      font-size: 30px;
+    }
+
+    .logo span {
+      color: #f58220;
+    }
+
+    .logo p {
+      margin-top: 7px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-weight: bold;
+      color: #222;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #f58220;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      border: none;
+      border-radius: 7px;
+      background: #f58220;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-card">
+
+    <div class="logo">
+      <h1>HBA <span>Logistics</span></h1>
+      <p>Shipment Management Portal</p>
+    </div>
+
+    <label>Email</label>
+    <input
+      type="email"
+      id="email"
+      placeholder="admin@hbalogistics.ae"
+    >
+
+    <label>Password</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter password"
+    >
+
+    <button id="loginButton">LOGIN</button>
+
+    <div id="message"></div>
+
+  </div>
+
+  <script>
+    const supabaseUrl = "https://htrcvdnmfodamoatqucb.supabase.co";
+    const supabaseKey = "sb_publishable_55sANLOQ8OvI822POQnCDg_NebnhOyN";
+
+    const db = supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+    const message =
+      document.getElementById("message");
+
+    loginButton.addEventListener(
+      "click",
+      async function () {
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+        if (!email || !password) {
+          message.style.color = "red";
+          message.textContent =
+            "Please enter email and password.";
+          return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "LOGGING IN...";
+
+        const { data, error } =
+          await db.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+
+        loginButton.disabled = false;
+        loginButton.textContent = "LOGIN";
+
+        if (error) {
+          message.style.color = "red";
+          message.textContent =
+            "Invalid email or password.";
+          console.error(error);
+          return;
+        }
+
+        message.style.color = "green";
+        message.textContent =
+          "Login successful.";
+
+        window.location.href =
+          "dashboard.html";
+      }
+    );
+  </script>
+
+</body>
+</html>
