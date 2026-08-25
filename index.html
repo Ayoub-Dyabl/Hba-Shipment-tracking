@@ -331,6 +331,9 @@ background:
     }
 
     const shipment = data[0];
+    const formattedLastUpdate = shipment.last_update
+  ? new Date(shipment.last_update).toLocaleString()
+  : "-";
 
     trackingResult.innerHTML = `
       <div style="
@@ -353,7 +356,8 @@ background:
   <strong style="color:#111 !important;">Origin:</strong> ${shipment.origin || "-"}
 </p>
 
-<p <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;"><strong style="color:#111 !important;">Last Update:</strong> ${shipment.last_update ? new Date(shipment.last_update).toLocaleString() : "-"}</p>
+<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
+  <strong style="color:#111 !important;">Last Update:</strong> ${formattedLastUpdate}</p>
 </p>
 
 <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
@@ -367,10 +371,7 @@ background:
 <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
   <strong style="color:#111 !important;">ETA:</strong> ${shipment.eta || "-"}
 </p>
-          shipment.last_update
-            ? new Date(shipment.last_update).toLocaleString()
-            : "-"
-        }</p>
+         
       </div>
     `;
   }
