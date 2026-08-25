@@ -403,6 +403,77 @@ background:
     margin-top: 5px;
   }
 } 
+    .route-card {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 12px 0 22px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.route-point small {
+  display: block;
+  color: #999;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.route-point strong {
+  color: #222;
+  font-size: 18px;
+}
+
+.route-point.destination {
+  text-align: right;
+}
+
+.route-arrow {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff2e7;
+  color: #f58220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.route-current {
+  grid-column: 1 / -1;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  margin-top: 3px;
+  color: #666;
+  font-size: 13px;
+}
+
+.route-current strong {
+  color: #222;
+}
+
+@media (max-width: 700px) {
+  .route-card {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .route-point.destination {
+    text-align: left;
+  }
+
+  .route-arrow {
+    transform: rotate(90deg);
+  }
+}
   </style>
   
 </head>
@@ -585,20 +656,32 @@ const timelineHTML = `
         <h3 style="color:#f58220; margin-bottom:15px;">
           ${shipment.tracking_number}
         </h3>
-        ${timelineHTML}
+       
+<div class="route-card">
 
+  <div class="route-point">
+    <small>ORIGIN</small>
+    <strong>${shipment.origin || "-"}</strong>
+  </div>
+
+  <div class="route-arrow">→</div>
+
+  <div class="route-point destination">
+    <small>DESTINATION</small>
+    <strong>${shipment.destination || "-"}</strong>
+  </div>
+
+  <div class="route-current">
+    📍 Current Location:
+    <strong>${shipment.current_location || "-"}</strong>
+  </div>
+
+</div>
+ ${timelineHTML}
         <p <strong>Status:</strong>
   <span class="status-badge status-${statusClass}">
     ${shipment.status || "-"}
   </span>
-</p>
-
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Origin:</strong> ${shipment.origin || "-"}
-</p>
-
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Destination:</strong> ${shipment.destination || "-"}
 </p>
 
 <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
