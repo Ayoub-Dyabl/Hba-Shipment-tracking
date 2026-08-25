@@ -186,6 +186,58 @@
         padding: 15px;
       }
     }
+    .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f8f8f8);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+  border-left: 5px solid #f58220;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+}
+
+.stat-icon {
+  font-size: 34px;
+}
+
+.stat-label {
+  color: #777;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.stat-number {
+  font-size: 30px;
+  font-weight: 800;
+  color: #222;
+}
+
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
 </head>
 
@@ -197,6 +249,41 @@
 </header>
 
 <div class="container">
+  <div class="stats-grid">
+
+  <div class="stat-card">
+    <div class="stat-icon">🚛</div>
+    <div>
+      <div class="stat-label">Active Shipments</div>
+      <div class="stat-number" id="activeCount">0</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">🛃</div>
+    <div>
+      <div class="stat-label">At Border</div>
+      <div class="stat-number" id="borderCount">0</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">✅</div>
+    <div>
+      <div class="stat-label">Delivered</div>
+      <div class="stat-number" id="deliveredCount">0</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">📦</div>
+    <div>
+      <div class="stat-label">Total Shipments</div>
+      <div class="stat-number" id="totalCount">0</div>
+    </div>
+  </div>
+
+</div>
 
   <div class="card">
     <h2>Shipment Management</h2>
@@ -363,6 +450,24 @@
     }
 
     shipments = data || [];
+    const total = shipments.length;
+
+const delivered = shipments.filter(
+  s => (s.status || "").toLowerCase() === "delivered"
+).length;
+
+const atBorder = shipments.filter(
+  s => (s.status || "").toLowerCase() === "at border"
+).length;
+
+const active = shipments.filter(
+  s => (s.status || "").toLowerCase() !== "delivered"
+).length;
+
+document.getElementById("totalCount").textContent = total;
+document.getElementById("deliveredCount").textContent = delivered;
+document.getElementById("borderCount").textContent = atBorder;
+document.getElementById("activeCount").textContent = active;
 
     renderShipments(shipments);
   }
