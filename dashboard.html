@@ -419,16 +419,27 @@
         const id =
           document.getElementById("shipmentId").value;
 
-        const trackingNumber =
-          document.getElementById("trackingNumber")
-            .value.trim();
+      let trackingNumber =
+  document.getElementById("trackingNumber")
+    .value.trim();
 
-        if (!trackingNumber) {
-          message.style.color = "red";
-          message.textContent =
-            "Tracking number is required.";
-          return;
-        }
+if (!id) {
+  const { data: newTracking, error: trackingError } =
+    await db.rpc("generate_hba_tracking_number");
+
+  if (trackingError) {
+    console.error(trackingError);
+    message.style.color = "red";
+    message.textContent =
+      "Unable to generate tracking number.";
+    return;
+  }
+
+  trackingNumber = newTracking;
+
+  document.getElementById("trackingNumber").value =
+    trackingNumber;
+}
 
         const shipmentData = {
 
