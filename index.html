@@ -474,6 +474,52 @@ background:
     transform: rotate(90deg);
   }
 }
+    .tracking-search {
+  display: flex;
+  width: 100%;
+  max-width: 620px;
+  margin: 15px auto 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.tracking-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 16px 18px;
+  font-size: 16px;
+  min-width: 0;
+}
+
+.tracking-search button {
+  border: none;
+  background: #f58220;
+  color: white;
+  padding: 0 24px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.tracking-search button:hover {
+  background: #db6d12;
+}
+
+@media (max-width: 600px) {
+  .tracking-search {
+    flex-direction: column;
+    border-radius: 10px;
+  }
+
+  .tracking-search button {
+    padding: 14px;
+  }
+}
   </style>
   
 </head>
@@ -507,17 +553,17 @@ background:
     <div class="tracking-box">
       <h2>Track Your Shipment</h2>
 
-    <input
+   <div class="tracking-search">
+  <input
     id="trackingNumber"
     type="text"
-    placeholder="Enter tracking number e.g. HBA-2026-001"
->
-<button id="trackButton">TRACK</button>
-
-<div id="trackingResult"></div>
-        >
-
-        
+    placeholder="Enter HBA tracking number"
+  >
+  <button id="trackButton">
+    TRACK SHIPMENT →
+  </button>
+</div>
+      
       </div>
     </div>
 
