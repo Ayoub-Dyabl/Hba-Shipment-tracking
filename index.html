@@ -353,8 +353,7 @@ background:
   <strong style="color:#111 !important;">Origin:</strong> ${shipment.origin || "-"}
 </p>
 
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Destination:</strong> ${shipment.destination || "-"}
+<p <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;"><strong style="color:#111 !important;">Last Update:</strong> ${shipment.last_update ? new Date(shipment.last_update).toLocaleString() : "-"}</p>
 </p>
 
 <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
