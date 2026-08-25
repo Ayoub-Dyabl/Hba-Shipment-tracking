@@ -270,6 +270,48 @@ background:
   color: #f58220;
   font-weight: bold;
 }
+    .status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-pending {
+  background: #eeeeee;
+  color: #555;
+}
+
+.status-loading {
+  background: #fff3cd;
+  color: #8a6500;
+}
+
+.status-in-transit {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-at-border {
+  background: #ffe2c8;
+  color: #d96500;
+}
+
+.status-customs-clearance {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.status-out-for-delivery {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-delivered {
+  background: #bbf7d0;
+  color: #166534;
+}
   </style>
   
 </head>
@@ -408,6 +450,8 @@ background:
 ];
 
 const currentStatus = (shipment.status || "").trim();
+    const statusClass =
+  currentStatus.toLowerCase().replace(/\s+/g, "-");
 
 const currentIndex = timelineSteps.findIndex(
   step => step.toLowerCase() === currentStatus.toLowerCase()
@@ -452,8 +496,10 @@ const timelineHTML = `
         </h3>
         ${timelineHTML}
 
-        <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Status:</strong> ${shipment.status || "-"}
+        <p <strong>Status:</strong>
+  <span class="status-badge status-${statusClass}">
+    ${shipment.status || "-"}
+  </span>
 </p>
 
 <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
