@@ -520,6 +520,40 @@ background:
     padding: 14px;
   }
 }
+    .shipment-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.detail-card {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.detail-label {
+  display: block;
+  color: #999;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  color: #222;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .shipment-details {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
   
 </head>
@@ -689,6 +723,13 @@ const timelineHTML = `
     const formattedLastUpdate = shipment.last_update
   ? new Date(shipment.last_update).toLocaleString()
   : "-";
+    const formattedETA = shipment.eta
+  ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })
+  : "-";
 
     trackingResult.innerHTML = `
       <div style="
@@ -729,27 +770,46 @@ const timelineHTML = `
     ${shipment.status || "-"}
   </span>
 </p>
+<div class="shipment-details">
 
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Last Update:</strong> ${formattedLastUpdate}</p>
-</p>
+  <div class="detail-card">
+    <span class="detail-label">👤 DRIVER</span>
+    <div class="detail-value">
+      ${shipment.driver_name || "-"}
+    </div>
+  </div>
 
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-    <strong style="color:#111 !important;">Driver Name:</strong> ${shipment.driver_name || "-"}
-</p>
+  <div class="detail-card">
+    <span class="detail-label">🚛 TRUCK</span>
+    <div class="detail-value">
+      ${shipment.truck_number || "-"}
+    </div>
+  </div>
 
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Current Location:</strong> ${shipment.current_location || "-"}
-</p>
+  <div class="detail-card">
+    <span class="detail-label">📅 ETA</span>
+    <div class="detail-value">
+      ${formattedETA}
+    </div>
+  </div>
 
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">Truck Number:</strong> ${shipment.truck_number || "-"}
-</p>
+  <div class="detail-card">
+    <span class="detail-label">🕒 LAST UPDATED</span>
+    <div class="detail-value">
+      ${formattedLastUpdate}
+    </div>
+  </div>
 
-<p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
-  <strong style="color:#111 !important;">ETA:</strong> ${shipment.eta || "-"}
-</p>
-         
+</div>
+
+const formattedETA = shipment.eta
+  ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })
+  : "-";
+     
       </div>
     `;
   }
