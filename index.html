@@ -204,7 +204,74 @@ background:
 #trackingResult strong {
   color: #111 !important;
 }
+    .tracking-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 25px 0;
+  position: relative;
+  gap: 5px;
+}
+
+.timeline-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  font-size: 12px;
+  color: #999;
+}
+
+.timeline-step::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: #ddd;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-step::after {
+  content: "";
+  height: 3px;
+  background: #ddd;
+  position: absolute;
+  top: 7px;
+  left: -50%;
+  width: 100%;
+  z-index: 1;
+}
+
+.timeline-step:first-child::after {
+  display: none;
+}
+
+.timeline-step.completed::before,
+.timeline-step.completed::after {
+  background: #f58220;
+}
+
+.timeline-step.completed {
+  color: #111;
+  font-weight: bold;
+}
+
+.timeline-step.current::before {
+  width: 20px;
+  height: 20px;
+  margin-top: -2px;
+  background: #f58220;
+  border: 4px solid #ffe2c8;
+}
+
+.timeline-step.current {
+  color: #f58220;
+  font-weight: bold;
+}
   </style>
+  
 </head>
 
 <body>
@@ -331,6 +398,42 @@ background:
     }
 
     const shipment = data[0];
+    const timelineSteps = [
+  "Loading",
+  "In Transit",
+  "At Border",
+  "Customs Clearance",
+  "Out for Delivery",
+  "Delivered"
+];
+
+const currentStatus = (shipment.status || "").trim();
+
+const currentIndex = timelineSteps.findIndex(
+  step => step.toLowerCase() === currentStatus.toLowerCase()
+);
+
+const timelineHTML = `
+  <div class="tracking-timeline">
+    ${timelineSteps.map((step, index) => {
+      let className = "";
+
+      if (currentIndex >= 0) {
+        if (index < currentIndex) {
+          className = "completed";
+        } else if (index === currentIndex) {
+          className = "current";
+        }
+      }
+
+      return `
+        <div class="timeline-step ${className}">
+          ${step}
+        </div>
+      `;
+    }).join("")}
+  </div>
+`;
     const formattedLastUpdate = shipment.last_update
   ? new Date(shipment.last_update).toLocaleString()
   : "-";
@@ -347,6 +450,7 @@ background:
         <h3 style="color:#f58220; margin-bottom:15px;">
           ${shipment.tracking_number}
         </h3>
+        ${timelineHTML}
 
         <p style="color:#222 !important; opacity:1 !important; margin:8px 0 !important;">
   <strong style="color:#111 !important;">Status:</strong> ${shipment.status || "-"}
