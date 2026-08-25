@@ -721,16 +721,18 @@ const timelineHTML = `
     }).join("")}
   </div>
 `;
-    const formattedLastUpdate = shipment.last_update
+   const formattedLastUpdate = shipment.last_update
   ? new Date(shipment.last_update).toLocaleString()
   : "-";
-    const formattedETA = shipment.eta
+
+const formattedETA = shipment.eta
   ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
       year: "numeric"
     })
   : "-";
+
 
     trackingResult.innerHTML = `
       <div style="
