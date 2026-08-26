@@ -1162,20 +1162,15 @@ if (!id) {
             return;
         }
 
-        const { data: matches, error: findError } =
-    await db
-        .from("shipments")
-        .select("*");
-
-const shipment = !findError
-    ? matches.find(s =>
-        String(s.tracking_number || "")
+       const shipment = shipments.find(s =>
+    String(s.tracking_number || "")
+        .trim()
+        .toLowerCase() === trackingNumber
             .trim()
-            .toLowerCase() === trackingNumber.toLowerCase()
-      )
-    : null;
+            .toLowerCase()
+);
 
-        if (findError || !shipment) {
+        if (!shipment) {
             messageBox.style.color = "red";
             messageBox.textContent = "Shipment not found.";
             return;
