@@ -530,6 +530,9 @@ if (delayedCard) {
 
     list.forEach(function(shipment) {
 
+      const row =
+        document.createElement("tr");
+      
       const status = (shipment.status || "").trim().toLowerCase();
 
 let isDelayed = false;
@@ -545,9 +548,6 @@ if (shipment.eta && status !== "delivered") {
 if (isDelayed) {
   row.classList.add("delayed-row");
 }
-
-      const row =
-        document.createElement("tr");
 
       row.innerHTML = `
         <td>${shipment.tracking_number || "-"}</td>
