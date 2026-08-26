@@ -1165,7 +1165,7 @@ if (!id) {
         const { data: matches, error: findError } =
     await db
         .from("shipments")
-        .select("id, tracking_number, shipment_history");
+        .select("*");
 
 const shipment = !findError
     ? matches.find(s =>
