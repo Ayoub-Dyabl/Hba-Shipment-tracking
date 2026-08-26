@@ -205,6 +205,14 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+    .delayed-card.alert {
+  border-left-color: #dc3545;
+  background: #fff5f5;
+}
+
+.delayed-card.alert .stat-number {
+  color: #dc3545;
+}
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 22px rgba(0,0,0,0.12);
@@ -282,9 +290,16 @@
       <div class="stat-number" id="totalCount">0</div>
     </div>
   </div>
-
+    
+<div class="stat-card delayed-card">
+  <div class="stat-icon">⚠️</div>
+  <div>
+    <div class="stat-label">Delayed Shipments</div>
+    <div class="stat-number" id="delayedCount">0</div>
+  </div>
 </div>
-
+    
+</div>
   <div class="card">
     <h2>Shipment Management</h2>
 
@@ -468,6 +483,29 @@ document.getElementById("totalCount").textContent = total;
 document.getElementById("deliveredCount").textContent = delivered;
 document.getElementById("borderCount").textContent = atBorder;
 document.getElementById("activeCount").textContent = active;
+
+    const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const delayed = shipments.filter(s => {
+  if (!s.eta) return false;
+
+  const status = (s.status || "").trim().toLowerCase();
+
+  if (status === "delivered") return false;
+
+  const etaDate = new Date(s.eta + "T00:00:00");
+
+  return etaDate < today;
+}).length;
+
+    document.getElementById("delayedCount").textContent = delayed;
+
+    const delayedCard = document.querySelector(".delayed-card");
+
+if (delayedCard) {
+  delayedCard.classList.toggle("alert", delayed > 0);
+}
 
     renderShipments(shipments);
   }
