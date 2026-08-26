@@ -255,6 +255,18 @@
   color: #b42318;
   font-weight: 600;
 }
+
+    .delay-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 7px;
+  border-radius: 20px;
+  background: #dc3545;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
     
   </style>
 </head>
@@ -551,7 +563,10 @@ if (isDelayed) {
 
       row.innerHTML = `
         <td>${shipment.tracking_number || "-"}</td>
-        <td>${shipment.status || "-"}</td>
+      <td>
+  ${shipment.status || "-"}
+  ${isDelayed ? '<span class="delay-badge">DELAYED</span>' : ''}
+</td>
         <td>${shipment.origin || "-"}</td>
         <td>${shipment.destination || "-"}</td>
         <td>${shipment.current_location || "-"}</td>
