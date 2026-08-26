@@ -1176,8 +1176,8 @@ if (!id) {
             return;
         }
 
-        const history = Array.isArray(shipment.shipment_history)
-            ? shipment.shipment_history
+        const history = Array.isArray(shipment.Shipment_history)
+            ? shipment.Shipment_history
             : [];
 
         history.unshift({
@@ -1192,7 +1192,7 @@ if (!id) {
             await db
                 .from("shipments")
                 .update({
-                    shipment_history: history,
+                    Shipment_history: history,
                     last_update: new Date().toISOString()
                 })
                 .eq("id", shipment.id);
