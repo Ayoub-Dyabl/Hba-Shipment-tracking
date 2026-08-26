@@ -560,7 +560,15 @@ if (shipment.eta && status !== "delivered") {
 if (isDelayed) {
   row.classList.add("delayed-row");
 }
-
+      
+const formattedETA = shipment.eta
+  ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })
+  : "-";
+      
       row.innerHTML = `
         <td>${shipment.tracking_number || "-"}</td>
       <td>
@@ -572,7 +580,7 @@ if (isDelayed) {
         <td>${shipment.current_location || "-"}</td>
         <td>${shipment.driver_name || "-"}</td>
         <td>${shipment.truck_number || "-"}</td>
-        <td>${shipment.eta || "-"}</td>
+        <td>${formattedETA}</td>
 
         <td>
           <button
