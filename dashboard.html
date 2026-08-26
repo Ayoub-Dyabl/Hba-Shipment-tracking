@@ -1162,12 +1162,18 @@ if (!id) {
             return;
         }
 
-        const { data: shipment, error: findError } =
-            await db
-                .from("shipments")
-                .select("id, shipment_history")
-                .eq("tracking_number", trackingNumber)
-                .single();
+        const { data: matches, error: findError } =
+    await db
+        .from("shipments")
+        .select("id, tracking_number, shipment_history");
+
+const shipment = !findError
+    ? matches.find(s =>
+        String(s.tracking_number || "")
+            .trim()
+            .toLowerCase() === trackingNumber.toLowerCase()
+      )
+    : null;
 
         if (findError || !shipment) {
             messageBox.style.color = "red";
