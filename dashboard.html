@@ -302,6 +302,69 @@
   font-weight: 700;
   letter-spacing: 0.5px;
 }
+    @media (max-width: 600px) {
+
+    .container {
+        padding: 0 10px;
+        margin: 15px auto;
+    }
+
+    header {
+        padding: 12px 15px;
+    }
+
+    .header-brand {
+        gap: 8px;
+    }
+
+    .header-brand img {
+        height: 40px;
+    }
+
+    .header-brand span {
+        font-size: 17px;
+    }
+
+    header button {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-row input,
+    .search-row select,
+    .search-row button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 900px;
+    }
+}
     
   </style>
 </head>
