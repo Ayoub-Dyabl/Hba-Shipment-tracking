@@ -444,6 +444,7 @@
             <th>Driver</th>
             <th>Truck</th>
             <th>ETA</th>
+            <th>Last Updated</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -595,6 +596,16 @@ const formattedETA = shipment.eta
     })
   : "-";
       
+      const formattedLastUpdate = shipment.last_update
+    ? new Date(shipment.last_update).toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    : "-";
+      
       row.innerHTML = `
         <td>${shipment.tracking_number || "-"}</td>
       <td>
@@ -607,6 +618,7 @@ const formattedETA = shipment.eta
         <td>${shipment.driver_name || "-"}</td>
         <td>${shipment.truck_number || "-"}</td>
         <td>${formattedETA}</td>
+        <td>${formattedLastUpdate}</td>
 
         <td>
           <button
