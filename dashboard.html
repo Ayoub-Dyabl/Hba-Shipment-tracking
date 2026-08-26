@@ -1202,7 +1202,7 @@ if (!id) {
 
             messageBox.style.color = "red";
             messageBox.textContent =
-                "Unable to add shipment update.";
+                "Error: " + updateError.message; 
 
             return;
         }
