@@ -590,7 +590,40 @@
     <div id="message"></div>
   </div>
 
+<div class="card update-card">
+    <h2>Shipment Update</h2>
 
+    <div class="form-grid">
+        <div>
+            <label>Tracking Number</label>
+            <input id="updateTrackingNumber" placeholder="HBA-2026-0001">
+        </div>
+
+        <div>
+            <label>Location</label>
+            <input id="updateLocation" placeholder="Al-Omari">
+        </div>
+
+        <div>
+            <label>Update / Note</label>
+            <input id="updateMessage" placeholder="Customs clearance in progress">
+        </div>
+
+        <div>
+            <label>Date & Time</label>
+            <input type="datetime-local" id="updateDateTime">
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" id="addUpdateButton">
+            ADD UPDATE
+        </button>
+    </div>
+
+    <div id="updateMessageBox"></div>
+</div>
+  
   <div class="card">
     <h2>All Shipments</h2>
 
@@ -1102,6 +1135,87 @@ if (!id) {
       "click",
       loadShipments
     );
+
+  document
+    .getElementById("addUpdateButton")
+    .addEventListener("click", async function () {
+
+        const trackingNumber =
+            document.getElementById("updateTrackingNumber").value.trim();
+
+        const location =
+            document.getElementById("updateLocation").value.trim();
+
+        const message =
+            document.getElementById("updateMessage").value.trim();
+
+        const dateTime =
+            document.getElementById("updateDateTime").value;
+
+        const messageBox =
+            document.getElementById("updateMessageBox");
+
+        if (!trackingNumber || !message) {
+            messageBox.style.color = "red";
+            messageBox.textContent =
+                "Tracking number and update note are required.";
+            return;
+        }
+
+        const { data: shipment, error: findError } =
+            await db
+                .from("shipments")
+                .select("id, shipment_history")
+                .eq("tracking_number", trackingNumber)
+                .single();
+
+        if (findError || !shipment) {
+            messageBox.style.color = "red";
+            messageBox.textContent = "Shipment not found.";
+            return;
+        }
+
+        const history = Array.isArray(shipment.shipment_history)
+            ? shipment.shipment_history
+            : [];
+
+        history.unshift({
+            date: dateTime
+                ? new Date(dateTime).toISOString()
+                : new Date().toISOString(),
+            location: location || "",
+            message: message
+        });
+
+        const { error: updateError } =
+            await db
+                .from("shipments")
+                .update({
+                    shipment_history: history,
+                    last_update: new Date().toISOString()
+                })
+                .eq("id", shipment.id);
+
+        if (updateError) {
+            console.error(updateError);
+
+            messageBox.style.color = "red";
+            messageBox.textContent =
+                "Unable to add shipment update.";
+
+            return;
+        }
+
+        messageBox.style.color = "green";
+        messageBox.textContent =
+            "Shipment update added successfully.";
+
+        document.getElementById("updateLocation").value = "";
+        document.getElementById("updateMessage").value = "";
+        document.getElementById("updateDateTime").value = "";
+
+        loadShipments();
+    });
 
 
  function applyFilters() {
