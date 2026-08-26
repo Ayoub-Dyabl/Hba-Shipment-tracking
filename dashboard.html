@@ -397,15 +397,24 @@
     <h2>All Shipments</h2>
 
     <div class="search-row">
-      <input
-        id="searchInput"
-        placeholder="Search tracking number, driver, truck or destination..."
-      >
-      <button class="btn btn-primary" id="refreshButton">
-        REFRESH
-      </button>
-    </div>
+  <input
+    id="searchInput"
+    placeholder="Search tracking number, driver, truck or destination..."
+  >
 
+  <select id="statusFilter">
+    <option value="all">All Shipments</option>
+    <option value="active">Active</option>
+    <option value="at border">At Border</option>
+    <option value="delayed">Delayed</option>
+    <option value="delivered">Delivered</option>
+  </select>
+
+  <button class="btn btn-primary" id="refreshButton">
+    REFRESH
+  </button>
+</div>
+    
     <div class="table-wrapper">
       <table>
         <thead>
@@ -839,49 +848,68 @@ if (!id) {
     );
 
 
-  document
+ function applyFilters() {
+  const search = document
     .getElementById("searchInput")
-    .addEventListener(
-      "input",
-      function() {
+    .value
+    .toLowerCase()
+    .trim();
 
-        const search =
-          this.value
-            .toLowerCase()
-            .trim();
+  const selectedStatus =
+    document.getElementById("statusFilter").value;
 
-        const filtered =
-          shipments.filter(function(s) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-            return (
-              (s.tracking_number || "")
-                .toLowerCase()
-                .includes(search)
+  const filtered = shipments.filter(function(s) {
 
-              ||
+    const matchesSearch =
+      (s.tracking_number || "").toLowerCase().includes(search) ||
+      (s.driver_name || "").toLowerCase().includes(search) ||
+      (s.truck_number || "").toLowerCase().includes(search) ||
+      (s.destination || "").toLowerCase().includes(search);
 
-              (s.driver_name || "")
-                .toLowerCase()
-                .includes(search)
+    if (!matchesSearch) return false;
 
-              ||
+    const status = (s.status || "").trim().toLowerCase();
 
-              (s.truck_number || "")
-                .toLowerCase()
-                .includes(search)
+    if (selectedStatus === "all") {
+      return true;
+    }
 
-              ||
+    if (selectedStatus === "active") {
+      return status !== "delivered";
+    }
 
-              (s.destination || "")
-                .toLowerCase()
-                .includes(search)
-            );
-          });
+    if (selectedStatus === "at border") {
+      return status === "at border";
+    }
 
-        renderShipments(filtered);
-      }
-    );
+    if (selectedStatus === "delivered") {
+      return status === "delivered";
+    }
 
+    if (selectedStatus === "delayed") {
+      if (!s.eta || status === "delivered") return false;
+
+      const etaDate = new Date(s.eta + "T00:00:00");
+
+      return etaDate < today;
+    }
+
+    return true;
+  });
+
+  renderShipments(filtered);
+}
+
+document
+  .getElementById("searchInput")
+  .addEventListener("input", applyFilters);
+
+document
+  .getElementById("statusFilter")
+  .addEventListener("change", applyFilters);
 
   document
     .getElementById("logoutButton")
