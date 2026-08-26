@@ -302,7 +302,68 @@
   font-weight: 700;
   letter-spacing: 0.5px;
 }
+    #mobileShipmentCards {
+    display: none;
+}
+
+.mobile-shipment-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-left: 5px solid #F58220;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.mobile-card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.mobile-card-top strong {
+    color: #F58220;
+    font-size: 17px;
+}
+
+.mobile-route {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 14px;
+}
+
+.mobile-card-details {
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.mobile-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.mobile-card-actions button {
+    flex: 1;
+}
+
+.delayed-mobile-card {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+    
     @media (max-width: 600px) {
+      
+      #mobileShipmentCards {
+    display: block;
+}
+
+.table-wrapper {
+    display: none;
+}
 
     .container {
         padding: 0 10px;
@@ -551,7 +612,8 @@
     REFRESH
   </button>
 </div>
-    
+
+    <div id="mobileShipmentCards"></div>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -684,8 +746,12 @@ if (delayedCard) {
 
     const table =
       document.getElementById("shipmentTable");
+    
+    const mobileCards =
+    document.getElementById("mobileShipmentCards");
 
     table.innerHTML = "";
+    mobileCards.innerHTML = "";
 
     list.forEach(function(shipment) {
 
@@ -725,6 +791,47 @@ const formattedETA = shipment.eta
         minute: "2-digit"
       })
     : "-";
+
+      const mobileCard = document.createElement("div");
+mobileCard.className = isDelayed
+    ? "mobile-shipment-card delayed-mobile-card"
+    : "mobile-shipment-card";
+
+mobileCard.innerHTML = `
+    <div class="mobile-card-top">
+        <strong>${shipment.tracking_number || "-"}</strong>
+        <span>
+            ${shipment.status || "-"}
+            ${isDelayed ? '<span class="delay-badge">DELAYED</span>' : ''}
+        </span>
+    </div>
+
+    <div class="mobile-route">
+        ${shipment.origin || "-"} → ${shipment.destination || "-"}
+    </div>
+
+    <div class="mobile-card-details">
+        <div>📍 <strong>Location:</strong> ${shipment.current_location || "-"}</div>
+        <div>👤 <strong>Driver:</strong> ${shipment.driver_name || "-"}</div>
+        <div>🚛 <strong>Truck:</strong> ${shipment.truck_number || "-"}</div>
+        <div>📅 <strong>ETA:</strong> ${formattedETA}</div>
+        <div>🕒 <strong>Updated:</strong> ${formattedLastUpdate}</div>
+    </div>
+
+    <div class="mobile-card-actions">
+        <button class="edit-btn"
+            onclick="editShipment(${shipment.id})">
+            EDIT
+        </button>
+
+        <button class="delete-btn"
+            onclick="deleteShipment(${shipment.id})">
+            DELETE
+        </button>
+    </div>
+`;
+
+mobileCards.appendChild(mobileCard);
       
       row.innerHTML = `
         <td>${shipment.tracking_number || "-"}</td>
