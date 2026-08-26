@@ -28,6 +28,24 @@
       justify-content: space-between;
       align-items: center;
     }
+    
+    .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-brand img {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+}
+
+.header-brand span {
+    color: #F58220;
+    font-size: 22px;
+    font-weight: 700;
+}
 
     header h1 span {
       color: #f58220;
@@ -291,7 +309,11 @@
 <body>
 
 <header>
-  <h1>HBA <span>Operations</span></h1>
+<div class="header-brand">
+  <img src="logo.webp" alt="HBA Logo">
+  <span>Operations</span>
+</div>
+  
   <button id="logoutButton">LOGOUT</button>
 </header>
 
