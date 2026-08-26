@@ -246,6 +246,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+.delayed-row {
+  background: #fff1f1 !important;
+}
+
+.delayed-row td {
+  color: #b42318;
+  font-weight: 600;
+}
+    
   </style>
 </head>
 
@@ -519,6 +529,22 @@ if (delayedCard) {
     table.innerHTML = "";
 
     list.forEach(function(shipment) {
+
+      const status = (shipment.status || "").trim().toLowerCase();
+
+let isDelayed = false;
+
+if (shipment.eta && status !== "delivered") {
+  const etaDate = new Date(shipment.eta + "T00:00:00");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  isDelayed = etaDate < today;
+}
+
+if (isDelayed) {
+  row.classList.add("delayed-row");
+}
 
       const row =
         document.createElement("tr");
