@@ -1188,6 +1188,46 @@ if (!id) {
             message: message
         });
 
+      const updateText = `${location} ${message}`.toLowerCase();
+
+let autoStatus = null;
+
+if (
+    updateText.includes("delivered") ||
+    updateText.includes("delivery completed")
+) {
+    autoStatus = "Delivered";
+}
+else if (updateText.includes("out for delivery")) {
+    autoStatus = "Out for Delivery";
+}
+else if (
+    updateText.includes("customs clearance") ||
+    updateText.includes("customs") ||
+    updateText.includes("clearance in progress")
+) {
+    autoStatus = "Customs Clearance";
+}
+else if (
+    updateText.includes("border") ||
+    updateText.includes("at border")
+) {
+    autoStatus = "At Border";
+}
+else if (
+    updateText.includes("in transit") ||
+    updateText.includes("departed") ||
+    updateText.includes("on the way")
+) {
+    autoStatus = "In Transit";
+}
+else if (
+    updateText.includes("loading") ||
+    updateText.includes("being loaded")
+) {
+    autoStatus = "Loading";
+}
+      
        const updateData = {
     shipment_history: history,
     last_update: new Date().toISOString()
@@ -1195,6 +1235,9 @@ if (!id) {
 
 if (location) {
     updateData.current_location = location;
+}
+      if (autoStatus) {
+    updateData.status = autoStatus;
 }
 
 const { error: updateError } =
