@@ -1176,9 +1176,9 @@ if (!id) {
             return;
         }
 
-        const history = Array.isArray(shipment.Shipment_history)
-            ? shipment.Shipment_history
-            : [];
+       const history = Array.isArray(shipment.shipment_history)
+    ? shipment.shipment_history
+    : [];
 
         history.unshift({
             date: dateTime
@@ -1209,7 +1209,7 @@ if (!id) {
 
         messageBox.style.color = "green";
         messageBox.textContent =
-             "Unable to add shipment update.";
+             "Shipment update added successfully.";
 
         document.getElementById("updateLocation").value = "";
         document.getElementById("updateMessage").value = "";
