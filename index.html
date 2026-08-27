@@ -623,6 +623,13 @@ background:
     text-align: center;
     letter-spacing: 0.5px;
 }
+
+    .delay-reason {
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #b42318;
+}
     
   </style>
   
@@ -807,8 +814,17 @@ const timelineHTML = `
   ? shipment.shipment_history
   : [];
 
-    const delayedHTML = shipment.delayed
-    ? `<div class="delay-alert">⚠ DELAYED SHIPMENT</div>`
+    conconst delayedHTML = shipment.delayed
+    ? `
+        <div class="delay-alert">
+            ⚠ DELAYED SHIPMENT
+            ${
+                shipment.delay_reason
+                    ? `<div class="delay-reason">Reason: ${shipment.delay_reason}</div>`
+                    : ""
+            }
+        </div>
+      `
     : "";
     
 const historyHTML = shipmentHistory.length
