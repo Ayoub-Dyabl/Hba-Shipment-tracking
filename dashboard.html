@@ -613,7 +613,13 @@ f<!DOCTYPE html>
             <label>Date & Time</label>
             <input type="datetime-local" id="updateDateTime">
         </div>
-    </div>
+
+      <div class="delay-update-option">
+  <label>
+    <input type="checkbox" id="updateDelayed">
+    Mark shipment as delayed
+  </label>
+</div>
 
     <div class="actions">
         <button class="btn btn-primary" id="addUpdateButton">
@@ -1152,6 +1158,9 @@ if (!id) {
         const dateTime =
             document.getElementById("updateDateTime").value;
 
+        const isDelayed =
+             document.getElementById("updateDelayed").checked;
+
         const messageBox =
             document.getElementById("updateMessageBox");
 
@@ -1228,9 +1237,10 @@ else if (
     autoStatus = "Loading";
 }
       
-       const updateData = {
+      const updateData = {
     shipment_history: history,
-    last_update: new Date().toISOString()
+    last_update: new Date().toISOString(),
+    delayed: isDelayed
 };
 
 if (location) {
@@ -1263,6 +1273,7 @@ const { error: updateError } =
         document.getElementById("updateLocation").value = "";
         document.getElementById("updateMessage").value = "";
         document.getElementById("updateDateTime").value = "";
+        document.getElementById("updateDelayed").checked = false;
 
         loadShipments();
     });
