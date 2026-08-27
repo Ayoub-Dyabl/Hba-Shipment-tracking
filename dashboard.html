@@ -1188,14 +1188,20 @@ if (!id) {
             message: message
         });
 
-        const { error: updateError } =
-            await db
-                .from("Shipments")
-                .update({
-                    shipment_history: history,
-                    last_update: new Date().toISOString()
-                })
-                .eq("id", shipment.id);
+       const updateData = {
+    shipment_history: history,
+    last_update: new Date().toISOString()
+};
+
+if (location) {
+    updateData.current_location = location;
+}
+
+const { error: updateError } =
+    await db
+        .from("Shipments")
+        .update(updateData)
+        .eq("id", shipment.id);
 
         if (updateError) {
             console.error(updateError);
