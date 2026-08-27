@@ -554,6 +554,63 @@ background:
     grid-template-columns: 1fr;
   }
 }
+
+    .shipment-history {
+    margin-top: 30px;
+    padding: 22px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-left: 5px solid #f58220;
+    border-radius: 12px;
+}
+
+.shipment-history h4 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    color: #222;
+}
+
+.history-item {
+    display: flex;
+    gap: 15px;
+    position: relative;
+    padding-bottom: 22px;
+}
+
+.history-item:last-child {
+    padding-bottom: 0;
+}
+
+.history-dot {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    background: #f58220;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+.history-content {
+    flex: 1;
+}
+
+.history-content strong {
+    display: block;
+    font-size: 16px;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.history-content div {
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.history-content small {
+    color: #999;
+    font-size: 12px;
+}
+    
   </style>
   
 </head>
@@ -732,6 +789,42 @@ const timelineHTML = `
       year: "numeric"
     })
   : "-";
+
+    const shipmentHistory = Array.isArray(shipment.shipment_history)
+  ? shipment.shipment_history
+  : [];
+
+const historyHTML = shipmentHistory.length
+  ? `
+    <div class="shipment-history">
+      <h4>Shipment Updates</h4>
+
+      ${shipmentHistory.map(update => {
+        const updateDate = update.date
+          ? new Date(update.date).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            })
+          : "-";
+
+        return `
+          <div class="history-item">
+            <div class="history-dot"></div>
+
+            <div class="history-content">
+              <strong>${update.location || "-"}</strong>
+              <div>${update.message || "-"}</div>
+              <small>${updateDate}</small>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `
+  : "";
     
 trackingResult.innerHTML = `
   <div style="
@@ -767,6 +860,7 @@ trackingResult.innerHTML = `
 
 </div>
  ${timelineHTML}
+ ${historyHTML}
         <p <strong>Status:</strong>
   <span class="status-badge status-${statusClass}">
     ${shipment.status || "-"}
