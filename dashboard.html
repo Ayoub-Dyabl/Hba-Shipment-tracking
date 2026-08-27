@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1190,9 +1190,9 @@ if (!id) {
 
         const { error: updateError } =
             await db
-                .from("shipments")
+                .from("Shipments")
                 .update({
-                    Shipment_history: history,
+                    shipment_history: history,
                     last_update: new Date().toISOString()
                 })
                 .eq("id", shipment.id);
