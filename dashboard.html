@@ -1247,8 +1247,15 @@ else if (
 ) {
     autoStatus = "In Transit";
 }
+ else if (
+    updateText.includes("offloading") ||
+    updateText.includes("unloading") ||
+    updateText.includes("waiting for offloading")
+) {
+    autoStatus = "Out for Delivery";
+} 
 else if (
-    updateText.includes("loading") ||
+    /\bloading\b/.test(updateText) ||
     updateText.includes("being loaded")
 ) {
     autoStatus = "Loading";
