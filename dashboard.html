@@ -621,6 +621,14 @@ f<!DOCTYPE html>
   </label>
 </div>
 
+      <div>
+  <label>Delay Reason</label>
+  <input
+    id="updateDelayReason"
+    placeholder="Example: Border congestion, customs delay, ferry delay"
+  >
+</div>
+
     <div class="actions">
         <button class="btn btn-primary" id="addUpdateButton">
             ADD UPDATE
@@ -1161,6 +1169,15 @@ if (!id) {
         const isDelayed =
              document.getElementById("updateDelayed").checked;
 
+        const delayReason =
+             document.getElementById("updateDelayReason").value.trim();
+
+      if (isDelayed && !delayReason) {
+    messageBox.style.color = "red";
+    messageBox.textContent = "Please enter a delay reason.";
+    return;
+}
+
         const messageBox =
             document.getElementById("updateMessageBox");
 
@@ -1237,10 +1254,11 @@ else if (
     autoStatus = "Loading";
 }
       
-      const updateData = {
+     const updateData = {
     shipment_history: history,
     last_update: new Date().toISOString(),
-    delayed: isDelayed
+    delayed: isDelayed,
+    delay_reason: isDelayed ? delayReason : null
 };
 
 if (location) {
@@ -1274,6 +1292,7 @@ const { error: updateError } =
         document.getElementById("updateMessage").value = "";
         document.getElementById("updateDateTime").value = "";
         document.getElementById("updateDelayed").checked = false;
+        document.getElementById("updateDelayReason").value = "";
 
         loadShipments();
     });
