@@ -1043,6 +1043,12 @@ mobileCards.appendChild(mobileCard);
             COPY UPDATE
         </button>
 
+        <button
+            class="edit-btn"
+           onclick="copyTrackingLink('${shipment.tracking_number}')">
+           COPY LINK
+       </button>
+
           <button
             class="delete-btn"
             onclick="deleteShipment(${shipment.id})">
@@ -1244,6 +1250,18 @@ ETA: ${eta}`;
     await navigator.clipboard.writeText(text);
 
     alert("Shipment update copied!");
+}
+
+  async function copyTrackingLink(trackingNumber) {
+    const link =
+        window.location.origin +
+        window.location.pathname.replace("dashboard.html", "") +
+        "?tracking=" +
+        encodeURIComponent(trackingNumber);
+
+    await navigator.clipboard.writeText(link);
+
+    alert("Tracking link copied!");
 }
 
   async function deleteShipment(id) {
