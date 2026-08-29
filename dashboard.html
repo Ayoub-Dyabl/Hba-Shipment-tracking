@@ -517,7 +517,7 @@ f<!DOCTYPE html>
 <div class="container">
   <div class="stats-grid">
 
-  <div class="stat-card">
+<div class="stat-card active-card">
     <div class="stat-icon">🚛</div>
     <div>
       <div class="stat-label">Active Shipments</div>
@@ -525,7 +525,7 @@ f<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="stat-card">
+  <div class="stat-card border-card">
     <div class="stat-icon">🛃</div>
     <div>
       <div class="stat-label">At Border</div>
@@ -533,7 +533,7 @@ f<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="stat-card">
+ <div class="stat-card delivered-card">
     <div class="stat-icon">✅</div>
     <div>
       <div class="stat-label">Delivered</div>
@@ -541,7 +541,7 @@ f<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="stat-card">
+  <div class="stat-card total-card">
     <div class="stat-icon">📦</div>
     <div>
       <div class="stat-label">Total Shipments</div>
@@ -855,6 +855,43 @@ if (overdueCard) {
     overdueCard.onclick = () => {
         const statusFilter = document.getElementById("statusFilter");
         statusFilter.value = "overdue";
+        applyFilters();
+    };
+}
+
+    const activeCard = document.querySelector(".active-card");
+const borderCard = document.querySelector(".border-card");
+const deliveredCard = document.querySelector(".delivered-card");
+const totalCard = document.querySelector(".total-card");
+
+if (activeCard) {
+    activeCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "active";
+        applyFilters();
+    };
+}
+
+if (borderCard) {
+    borderCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "at border";
+        applyFilters();
+    };
+}
+
+if (deliveredCard) {
+    deliveredCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "delivered";
+        applyFilters();
+    };
+}
+
+if (totalCard) {
+    totalCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "all";
         applyFilters();
     };
 }
