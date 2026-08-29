@@ -787,8 +787,15 @@ const delayed = shipments.filter(
 
 if (delayedCard) {
   delayedCard.classList.toggle("alert", delayed > 0);
+  
+  delayedCard.onclick = () => 
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "delayed";
+        applyFilters();
+    };
 }
 
+    
     renderShipments(shipments);
   }
 
