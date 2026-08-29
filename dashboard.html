@@ -663,6 +663,7 @@ f<!DOCTYPE html>
   <select id="statusFilter">
     <option value="all">All Shipments</option>
     <option value="active">Active</option>
+    <option value="delayed">Delayed Shipments</option>
     <option value="at border">At Border</option>
     <option value="delayed">Delayed</option>
     <option value="delivered">Delivered</option>
@@ -775,20 +776,10 @@ document.getElementById("deliveredCount").textContent = delivered;
 document.getElementById("borderCount").textContent = atBorder;
 document.getElementById("activeCount").textContent = active;
 
-    const today = new Date();
-today.setHours(0, 0, 0, 0);
-
-const delayed = shipments.filter(s => {
-  if (!s.eta) return false;
-
-  const status = (s.status || "").trim().toLowerCase();
-
-  if (status === "delivered") return false;
-
-  const etaDate = new Date(s.eta + "T00:00:00");
-
-  return etaDate < today;
-}).length;
+   
+const delayed = shipments.filter(
+    s => s.delayed === true
+).length;
 
     document.getElementById("delayedCount").textContent = delayed;
 
@@ -1347,6 +1338,10 @@ const { error: updateError } =
       return true;
     }
 
+    if (selectedStatus === "delayed") {
+    return s.delayed === true;
+}
+
     if (selectedStatus === "active") {
       return status !== "delivered";
     }
@@ -1357,14 +1352,6 @@ const { error: updateError } =
 
     if (selectedStatus === "delivered") {
       return status === "delivered";
-    }
-
-    if (selectedStatus === "delayed") {
-      if (!s.eta || status === "delivered") return false;
-
-      const etaDate = new Date(s.eta + "T00:00:00");
-
-      return etaDate < today;
     }
 
     return true;
