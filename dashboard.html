@@ -531,6 +531,15 @@ f<!DOCTYPE html>
     <div class="stat-number" id="delayedCount">0</div>
   </div>
 </div>
+
+    <div class="stat-card overdue-card">
+    <div class="stat-icon">⏰</div>
+    <div>
+        <div class="stat-title">Overdue Shipments</div>
+        <div class="stat-number" id="overdueCount">0</div>
+    </div>
+</div>
+    
     
 </div>
   <div class="card">
@@ -784,6 +793,23 @@ const delayed = shipments.filter(
 
     document.getElementById("delayedCount").textContent = delayed;
 
+    const todayStart = new Date();
+todayStart.setHours(0, 0, 0, 0);
+
+const overdue = shipments.filter(s => {
+    const status = (s.status || "").trim().toLowerCase();
+
+    if (!s.eta || status === "delivered") {
+        return false;
+    }
+
+    const etaDate = new Date(s.eta + "T00:00:00");
+
+    return etaDate < todayStart;
+}).length;
+
+document.getElementById("overdueCount").textContent = overdue;
+
     const delayedCard = document.querySelector(".delayed-card");
 
 if (delayedCard) {
@@ -796,7 +822,18 @@ if (delayedCard) {
     };
 }
 
-    
+    const overdueCard = document.querySelector(".overdue-card");
+
+if (overdueCard) {
+    overdueCard.classList.toggle("alert", overdue > 0);
+
+    overdueCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "overdue";
+        applyFilters();
+    };
+}
+  
     renderShipments(shipments);
   }
 
