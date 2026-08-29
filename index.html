@@ -727,6 +727,13 @@ background:
   const trackButton = document.getElementById("trackButton");
   const trackingResult = document.getElementById("trackingResult");
 
+const urlParams = new URLSearchParams(window.location.search);
+const trackingFromLink = urlParams.get("tracking");
+
+if (trackingFromLink) {
+    trackingInput.value = trackingFromLink;
+}  
+
   async function trackShipment() {
     const trackingNumber = trackingInput.value.trim();
 
@@ -936,7 +943,11 @@ trackingResult.innerHTML = `
       </div>
     `;
   }
-
+  
+if (trackingFromLink) {
+    trackShipment();
+}
+  
   trackButton.addEventListener("click", trackShipment);
 
   trackingInput.addEventListener("keydown", function(event) {
