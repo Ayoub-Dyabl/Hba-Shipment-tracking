@@ -534,6 +534,31 @@ background:
   padding: 14px 16px;
 }
 
+    .pod-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: #f58220;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(245, 130, 32, 0.25);
+}
+
+.pod-btn:hover {
+    background: #e66f0d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 130, 32, 0.35);
+}
+
 .detail-label {
   display: block;
   color: #999;
@@ -769,9 +794,9 @@ if (trackingFromLink) {
     const shipment = data[0];
 
     const podHTML = shipment.pod_path
-    ? `<button class="track-btn"
+    ? `<button class="pod-btn"
         onclick="viewCustomerPOD('${shipment.pod_path}')">
-        VIEW POD
+         VIEW PROOF OF DELIVERY
        </button>`
     : "";
     
