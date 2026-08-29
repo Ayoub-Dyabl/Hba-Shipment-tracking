@@ -371,15 +371,24 @@ f<!DOCTYPE html>
     display: none;
 }
     
-    @media (max-width: 600px) {
-      
+ @media (min-width: 601px) {
     #mobileShipmentCards {
-    display: block;
+        display: none !important;
+    }
+
+    .table-wrapper {
+        display: block !important;
+    }
 }
-      
-.table-wrapper {
-    display: none;
-}
+
+@media (max-width: 600px) {
+    #mobileShipmentCards {
+        display: block !important;
+    }
+
+    .table-wrapper {
+        display: none !important;
+    }
 
     .container {
         padding: 0 10px;
