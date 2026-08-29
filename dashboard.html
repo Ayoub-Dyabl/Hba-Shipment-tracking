@@ -1367,9 +1367,9 @@ const { error: updateError } =
       return status !== "delivered";
     }
 
-    if (selectedStatus === "at border") {
-      return status === "at border";
-    }
+   if (selectedStatus === "at-border") {
+    return status === "at border";
+}
 
     if (selectedStatus === "delivered") {
       return status === "delivered";
