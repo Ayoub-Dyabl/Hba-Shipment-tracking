@@ -1055,6 +1055,12 @@ mobileCards.appendChild(mobileCard);
     UPLOAD POD
 </button>
 
+<button
+    class="edit-btn"
+    onclick="viewPOD('${shipment.pod_path || ""}')">
+    VIEW POD
+</button>
+
          <button
             class="delete-btn"
             onclick="deleteShipment(${shipment.id})">
@@ -1311,6 +1317,25 @@ ETA: ${eta}`;
     input.click();
 }
 
+   async function viewPOD(podPath) {
+    if (!podPath) {
+        alert("No POD uploaded for this shipment.");
+        return;
+    }
+
+    const { data, error } = await db.storage
+        .from("pod-files")
+        .createSignedUrl(podPath, 60);
+
+    if (error || !data) {
+        console.error(error);
+        alert("Unable to open POD.");
+        return;
+    }
+
+    window.open(data.signedUrl, "_blank");
+}
+  
   async function deleteShipment(id) {
 
     const confirmed =
