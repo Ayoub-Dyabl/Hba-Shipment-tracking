@@ -1049,7 +1049,13 @@ mobileCards.appendChild(mobileCard);
            COPY LINK
        </button>
 
-          <button
+       <button
+    class="edit-btn"
+    onclick="uploadPOD(${shipment.id}, '${shipment.tracking_number}')">
+    UPLOAD POD
+</button>
+
+         <button
             class="delete-btn"
             onclick="deleteShipment(${shipment.id})">
             DELETE
@@ -1262,6 +1268,47 @@ ETA: ${eta}`;
     await navigator.clipboard.writeText(link);
 
     alert("Tracking link copied!");
+}
+  
+  async function uploadPOD(id, trackingNumber) {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".pdf,.jpg,.jpeg,.png";
+
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const filePath =
+            trackingNumber + "/" + Date.now() + "_" + safeName;
+
+        const { error: uploadError } = await db.storage
+            .from("pod-files")
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error(uploadError);
+            alert("POD upload failed: " + uploadError.message);
+            return;
+        }
+
+        const { error: updateError } = await db
+            .from("Shipments")
+            .update({ pod_path: filePath })
+            .eq("id", id);
+
+        if (updateError) {
+            console.error(updateError);
+            alert("POD uploaded, but shipment record could not be updated.");
+            return;
+        }
+
+        alert("POD uploaded successfully!");
+        loadShipments();
+    };
+
+    input.click();
 }
 
   async function deleteShipment(id) {
