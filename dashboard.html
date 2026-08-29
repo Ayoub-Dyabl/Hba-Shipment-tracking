@@ -856,16 +856,18 @@ if (overdueCard) {
       
       const status = (shipment.status || "").trim().toLowerCase();
 
-let isDelayed = false;
+const isDelayed = shipment.delayed === true;
+
+let isOverdue = false;
 
 if (shipment.eta && status !== "delivered") {
-  const etaDate = new Date(shipment.eta + "T00:00:00");
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const etaDate = new Date(shipment.eta + "T00:00:00");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  isDelayed = etaDate < today;
+    isOverdue = etaDate < today;
 }
-
+      
 if (isDelayed) {
   row.classList.add("delayed-row");
 }
@@ -899,6 +901,7 @@ mobileCard.innerHTML = `
         <span>
             ${shipment.status || "-"}
             ${isDelayed ? '<span class="delay-badge">DELAYED</span>' : ''}
+            ${isOverdue ? `<span class="overdue-badge">OVERDUE</span>` : ""}
         </span>
     </div>
 
@@ -934,6 +937,7 @@ mobileCards.appendChild(mobileCard);
       <td>
   ${shipment.status || "-"}
   ${isDelayed ? '<span class="delay-badge">DELAYED</span>' : ''}
+  ${isOverdue ? `<span class="overdue-badge">OVERDUE</span>` : ""}
 </td>
         <td>${shipment.origin || "-"}</td>
         <td>${shipment.destination || "-"}</td>
