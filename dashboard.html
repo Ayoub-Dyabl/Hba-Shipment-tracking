@@ -1038,6 +1038,12 @@ mobileCards.appendChild(mobileCard);
           </button>
 
           <button
+             class="edit-btn"
+             onclick="copyShipmentUpdate(${shipment.id})">
+            COPY UPDATE
+        </button>
+
+          <button
             class="delete-btn"
             onclick="deleteShipment(${shipment.id})">
             DELETE
@@ -1210,6 +1216,35 @@ if (!id) {
     });
   }
 
+  async function copyShipmentUpdate(id) {
+    const { data: shipment, error } = await db
+        .from("Shipments")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error || !shipment) {
+        alert("Unable to copy shipment update.");
+        return;
+    }
+
+    const eta = shipment.eta
+        ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB")
+        : "-";
+
+    const text =
+`HBA Shipment Update
+
+Tracking: ${shipment.tracking_number || "-"}
+Route: ${shipment.origin || "-"} → ${shipment.destination || "-"}
+Status: ${shipment.status || "-"}
+Current Location: ${shipment.current_location || "-"}
+ETA: ${eta}`;
+
+    await navigator.clipboard.writeText(text);
+
+    alert("Shipment update copied!");
+}
 
   async function deleteShipment(id) {
 
