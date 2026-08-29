@@ -767,6 +767,14 @@ if (trackingFromLink) {
     }
 
     const shipment = data[0];
+
+    const podHTML = shipment.pod_path
+    ? `<button class="track-btn"
+        onclick="viewCustomerPOD('${shipment.pod_path}')">
+        VIEW POD
+       </button>`
+    : "";
+    
     const timelineSteps = [
   "Loading",
   "In Transit",
@@ -939,14 +947,29 @@ trackingResult.innerHTML = `
   </div>
 
 </div>
-     
+     ${podHTML}
       </div>
+      
     `;
   }
+
+  async function viewCustomerPOD(podPath) {
+    const { data, error } = await db.storage
+        .from("pod-files")
+        .createSignedUrl(podPath, 60);
+
+    if (error || !data) {
+        alert("Unable to open POD.");
+        return;
+    }
+
+    window.open(data.signedUrl, "_blank");
+}
   
 if (trackingFromLink) {
     trackShipment();
 }
+
   
   trackButton.addEventListener("click", trackShipment);
 
