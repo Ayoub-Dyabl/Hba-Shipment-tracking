@@ -665,7 +665,8 @@ f<!DOCTYPE html>
     <option value="active">Active</option>
     <option value="delayed">Delayed Shipments</option>
     <option value="at border">At Border</option>
-    <option value="delayed">Delayed</option>
+   
+    <option value="overdue">Overdue Shipments</option>
     <option value="delivered">Delivered</option>
   </select>
 
@@ -1347,6 +1348,19 @@ const { error: updateError } =
 
     if (selectedStatus === "delayed") {
     return s.delayed === true;
+}
+
+    if (selectedStatus === "overdue") {
+    if (!s.eta || status === "delivered") {
+        return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const etaDate = new Date(s.eta + "T00:00:00");
+
+    return etaDate < today;
 }
 
     if (selectedStatus === "active") {
