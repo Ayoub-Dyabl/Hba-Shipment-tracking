@@ -252,6 +252,13 @@ f<!DOCTYPE html>
   transform: translateY(-3px);
   box-shadow: 0 8px 22px rgba(0,0,0,0.12);
 }
+ .stat-card.selected {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 3px rgba(245, 130, 34, 0.25),
+                0 8px 22px rgba(0,0,0,0.12);
+    border-left-color: #f58220;
+    background: #fff8f2;
+}   
 
 .stat-icon {
   font-size: 34px;
@@ -895,7 +902,21 @@ if (totalCard) {
         applyFilters();
     };
 }
-  
+
+   document.querySelectorAll(".stat-card").forEach(card => {
+    if (card.dataset.selectBound) return;
+
+    card.dataset.selectBound = "true";
+
+    card.addEventListener("click", () => {
+        document.querySelectorAll(".stat-card").forEach(c => {
+            c.classList.remove("selected");
+        });
+
+        card.classList.add("selected");
+    });
+});
+    
     renderShipments(shipments);
   }
 
