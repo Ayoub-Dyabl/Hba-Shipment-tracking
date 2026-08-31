@@ -559,52 +559,59 @@ td:last-child .delete-btn {
     letter-spacing: 0.4px;
 }
 
-    .site-footer {
+   .site-footer {
+    width: 100%;
     margin-top: 40px;
-    padding: 24px 20px;
-    text-align: center;
-    background: #17181b;
-    border-top: 2px solid #f58220;
+    padding: 25px 15px;
+    box-sizing: border-box;
+    text-align: center !important;
+    background: transparent;
+    border-top: 1px solid #444;
 }
 
-.footer-contact {
+.site-footer .footer-contact {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: center !important;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 12px;
+    gap: 15px;
+    margin: 0 auto 10px auto;
+    text-align: center;
 }
 
-.footer-contact a {
-    color: #b9b9b9;
-    text-decoration: none;
+.site-footer .footer-contact a,
+.site-footer .footer-contact a:visited {
+    color: #b8b8b8 !important;
+    text-decoration: none !important;
     font-size: 13px;
     font-weight: 600;
-    transition: color 0.2s ease;
 }
 
-.footer-contact a:hover {
-    color: #f58220;
+.site-footer .footer-contact a:hover {
+    color: #f58220 !important;
 }
 
 .footer-divider {
-    color: #555;
+    color: #666;
 }
 
-.footer-designed {
-    color: #999;
-    font-size: 13px;
+.site-footer .footer-designed {
+    width: 100%;
+    text-align: center !important;
+    color: #777;
+    font-size: 12px;
+    letter-spacing: 0.3px;
 }
 
-.footer-designed strong {
+.site-footer .footer-designed strong {
     color: #f58220;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 @media (max-width: 600px) {
-    .footer-contact {
+    .site-footer .footer-contact {
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
     }
 
     .footer-divider {
