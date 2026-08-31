@@ -560,64 +560,75 @@ td:last-child .delete-btn {
 }
 
    .site-footer {
-    width: 100%;
-    margin-top: 40px;
-    padding: 25px 15px;
+    max-width: 1200px;
+    width: calc(100% - 40px);
+    margin: 40px auto 20px auto !important;
+    padding: 25px 20px !important;
     box-sizing: border-box;
     text-align: center !important;
-    background: transparent;
-    border-top: 1px solid #444;
+    background: #1d1f22;
+    border-top: 2px solid #f58220;
+    border-radius: 12px;
 }
 
 .site-footer .footer-contact {
-    width: 100%;
-    display: flex;
+    display: flex !important;
     justify-content: center !important;
-    align-items: center;
-    gap: 15px;
-    margin: 0 auto 10px auto;
-    text-align: center;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 14px;
+    margin: 0 auto 12px auto !important;
+    text-align: center !important;
 }
 
 .site-footer .footer-contact a,
+.site-footer .footer-contact a:link,
 .site-footer .footer-contact a:visited {
-    color: #b8b8b8 !important;
+    color: #c7c7c7 !important;
     text-decoration: none !important;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 13px !important;
+    font-weight: 600 !important;
 }
 
 .site-footer .footer-contact a:hover {
     color: #f58220 !important;
 }
 
-.footer-divider {
-    color: #666;
+.site-footer .footer-divider {
+    color: #666 !important;
 }
 
 .site-footer .footer-designed {
-    width: 100%;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
     text-align: center !important;
-    color: #777;
-    font-size: 12px;
-    letter-spacing: 0.3px;
+    color: #888 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
 }
 
 .site-footer .footer-designed strong {
-    color: #f58220;
-    font-weight: 700;
+    color: #f58220 !important;
+    font-weight: 700 !important;
 }
 
 @media (max-width: 600px) {
-    .site-footer .footer-contact {
-        flex-direction: column;
-        gap: 6px;
+    .site-footer {
+        width: calc(100% - 20px);
+        padding: 20px 10px !important;
     }
 
-    .footer-divider {
-        display: none;
+    .site-footer .footer-contact {
+        flex-direction: column !important;
+        gap: 7px;
+    }
+
+    .site-footer .footer-divider {
+        display: none !important;
     }
 }
+      
   </style>
 </head>
 
