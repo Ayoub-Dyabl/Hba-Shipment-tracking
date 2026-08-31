@@ -561,80 +561,54 @@ td:last-child .delete-btn {
 
     .site-footer {
     margin-top: 40px;
-    padding: 0 30px;
-    background: #1b1b1b;
-    border-top: 3px solid #f58220;
-    color: #aaa;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: auto;
-    padding: 25px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 25px;
-}
-
-.footer-brand {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.footer-title {
-    color: #fff;
-    font-size: 16px;
-    font-weight: 800;
-}
-
-.footer-designed {
-    font-size: 13px;
-    color: #aaa;
-}
-
-.footer-designed strong {
-    color: #f58220;
+    padding: 24px 20px;
+    text-align: center;
+    background: #17181b;
+    border-top: 2px solid #f58220;
 }
 
 .footer-contact {
     display: flex;
-    gap: 20px;
+    justify-content: center;
     align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
 }
 
 .footer-contact a {
-    color: #ddd;
+    color: #b9b9b9;
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;
-    transition: 0.2s ease;
+    transition: color 0.2s ease;
 }
 
 .footer-contact a:hover {
     color: #f58220;
 }
 
-.footer-bottom {
-    max-width: 1200px;
-    margin: auto;
-    padding: 14px 0;
-    text-align: center;
-    border-top: 1px solid #333;
-    color: #777;
-    font-size: 11px;
+.footer-divider {
+    color: #555;
 }
 
-@media (max-width: 700px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
+.footer-designed {
+    color: #999;
+    font-size: 13px;
+}
 
+.footer-designed strong {
+    color: #f58220;
+    font-weight: 800;
+}
+
+@media (max-width: 600px) {
     .footer-contact {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
+    }
+
+    .footer-divider {
+        display: none;
     }
 }
   </style>
@@ -1837,28 +1811,21 @@ document
 
 </script>
 
-  <footer class="site-footer">
-    <div class="footer-content">
+ <footer class="site-footer">
+    <div class="footer-contact">
+        <a href="mailto:Ayoubski414@gmail.com">
+            ✉ Ayoubski414@gmail.com
+        </a>
 
-        <div class="footer-brand">
-            <span class="footer-title">HBA Shipment Tracking</span>
-            <span class="footer-designed">Designed & Developed by <strong>Ayoub Yousfi</strong></span>
-        </div>
+        <span class="footer-divider">|</span>
 
-        <div class="footer-contact">
-            <a href="mailto:Ayoubski414@gmail.com">
-                ✉ Ayoubski414@gmail.com
-            </a>
-
-            <a href="tel:+971505615439">
-                ☎ +971 50 561 5439
-            </a>
-        </div>
-
+        <a href="tel:+971505615439">
+            ☎ +971 50 561 5439
+        </a>
     </div>
 
-    <div class="footer-bottom">
-        © 2026 HBA Transport. All rights reserved.
+    <div class="footer-designed">
+        Designed & Developed by <strong>Ayoub Yousfi</strong>
     </div>
 </footer>
   
