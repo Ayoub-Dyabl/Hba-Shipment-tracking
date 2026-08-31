@@ -682,6 +682,11 @@ select {
         </div>
 
         <div>
+            <label>Status</label>
+            <input id="updateStatus" placeholder="Example: In Transit">
+        </div>
+
+        <div>
             <label>Update / Note</label>
             <input id="updateMessage" placeholder="Customs clearance in progress">
         </div>
@@ -1480,6 +1485,9 @@ ETA: ${eta}`;
         const location =
             document.getElementById("updateLocation").value.trim();
 
+        const manualStatus =
+            document.getElementById("updateStatus").value.trim();
+
         const message =
             document.getElementById("updateMessage").value.trim();
 
@@ -1593,6 +1601,10 @@ if (location) {
 }
       if (autoStatus) {
     updateData.status = autoStatus;
+}
+
+      if (manualStatus) {
+    updateData.status = manualStatus;
 }
 
 const { error: updateError } =
