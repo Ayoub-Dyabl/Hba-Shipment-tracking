@@ -659,6 +659,141 @@ background:
     font-weight: 600;
     color: #b42318;
 }
+
+    .public-info-section {
+    margin-top: 50px;
+    padding: 50px 20px 30px;
+    background: #111214;
+    border-top: 2px solid #f58220;
+}
+
+.public-info-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.public-info-section h2 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #9a9a9a;
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.service-card {
+    background: #1a1b1e;
+    border: 1px solid #2d2d2d;
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: 0.2s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+    border-color: #f58220;
+}
+
+.service-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.service-card h3 {
+    color: #ffffff;
+    font-size: 15px;
+    margin-bottom: 7px;
+}
+
+.service-card p {
+    color: #999999;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.contact-section {
+    margin-top: 45px;
+    padding-top: 35px;
+    border-top: 1px solid #333;
+}
+
+.contact-grid {
+    max-width: 760px;
+    margin: 25px auto 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: #1a1b1e;
+    border: 1px solid #2d2d2d;
+    border-radius: 10px;
+}
+
+.contact-item > span {
+    font-size: 23px;
+}
+
+.contact-item small {
+    display: block;
+    color: #f58220;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+}
+
+.contact-item p,
+.contact-item a {
+    margin: 0;
+    color: #d0d0d0 !important;
+    text-decoration: none !important;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.contact-item a:hover {
+    color: #f58220 !important;
+}
+
+@media (max-width: 800px) {
+    .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .public-info-section {
+        padding: 35px 12px 25px;
+    }
+
+    .service-grid,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .public-info-section h2 {
+        font-size: 23px;
+    }
+}
     
   </style>
   
@@ -1032,5 +1167,94 @@ if (trackingFromLink) {
     }
   });
 </script>
+
+  </script>
+
+<!-- SERVICES & CONTACT -->
+<section class="public-info-section">
+
+    <div class="public-info-container">
+
+        <h2>Our Services</h2>
+        <p class="section-subtitle">
+            Reliable logistics solutions across the UAE, GCC & Middle East.
+        </p>
+
+        <div class="service-grid">
+
+            <div class="service-card">
+                <div class="service-icon">🚛</div>
+                <h3>Land Freight</h3>
+                <p>FTL & LTL road transportation.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">❄️</div>
+                <h3>Temperature Controlled</h3>
+                <p>Refrigerated transport for sensitive cargo.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🏗️</div>
+                <h3>Project & Heavy Cargo</h3>
+                <p>Flatbed, lowbed & specialized transport.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🌍</div>
+                <h3>Cross-Border Logistics</h3>
+                <p>International transport & customs coordination.</p>
+            </div>
+
+        </div>
+
+        <div class="contact-section">
+
+            <h2>Get In Touch</h2>
+
+            <div class="contact-grid">
+
+                <div class="contact-item">
+                    <span>📍</span>
+                    <div>
+                        <small>LOCATION</small>
+                        <p>Ras Al Khor Industrial Area 2</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span>☎️</span>
+                    <div>
+                        <small>PHONE</small>
+                        <a href="tel:+97145548071">+971 4 554 8071</a>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span>💬</span>
+                    <div>
+                        <small>WHATSAPP</small>
+                        <a href="https://wa.me/971505615439">+971 50 561 5439</a>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span>✉️</span>
+                    <div>
+                        <small>EMAIL</small>
+                        <a href="mailto:info@hbatransportation.ae">
+                            info@hbatransportation.ae
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 </body>
 </html>
