@@ -854,6 +854,27 @@ const timelineHTML = `
   ? shipment.shipment_history
   : [];
 
+    const deliveredUpdate = [...shipmentHistory]
+    .reverse()
+    .find(item =>
+        (item.update || "").toLowerCase().includes("offloading done") ||
+        (item.update || "").toLowerCase().includes("delivered")
+    );
+
+const deliveredDate = deliveredUpdate?.datetime
+    ? new Date(deliveredUpdate.datetime).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      })
+    : formattedLastUpdate;
+
+    const isDelivered =
+    (shipment.status || "").trim().toLowerCase() === "delivered";
+
+const dateLabel = isDelivered ? "DELIVERED ON" : "ETA";
+const dateValue = isDelivered ? deliveredDate : formattedETA;
+
     const delayedHTML = shipment.delayed
     ? `
         <div class="delay-alert">
@@ -958,10 +979,10 @@ trackingResult.innerHTML = `
   </div>
 
   <div class="detail-card">
-    <span class="detail-label">📅 ETA</span>
+    <span class="detail-label">📅 ${dateLabel}</span>
     <div class="detail-value">
-      ${formattedETA}
-    </div>
+    ${dateValue}
+  </div>
   </div>
 
   <div class="detail-card">
