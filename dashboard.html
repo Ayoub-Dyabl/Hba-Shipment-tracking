@@ -213,7 +213,7 @@ select {
     }
 
     tr:hover {
-      background: #fafafa;
+      background: #252833;
     }
 
     .edit-btn {
@@ -234,6 +234,34 @@ select {
       border-radius: 5px;
       cursor: pointer;
     }
+
+    /* Compact shipment action buttons */
+td:last-child .edit-btn,
+td:last-child .delete-btn {
+    padding: 5px 7px;
+    margin: 2px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+    .action-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 4px;
+    align-items: center;
+    justify-content: start;
+}
+
+.action-buttons .edit-btn,
+.action-buttons .delete-btn {
+    margin: 0;
+    padding: 5px 7px;
+    font-size: 10px;
+    border-radius: 4px;
+}
 
     @media (max-width: 700px) {
       .form-grid {
@@ -1068,9 +1096,10 @@ mobileCards.appendChild(mobileCard);
         <td>${shipment.driver_name || "-"}</td>
         <td>${shipment.truck_number || "-"}</td>
         <td>${formattedETA}</td>
-        <td>${formattedLastUpdate}</td>
+        <td>${formattedLastUpdate}</td>        
 
         <td>
+          <div class="action-buttons">
           <button
             class="edit-btn"
             onclick="editShipment(${shipment.id})">
@@ -1106,6 +1135,8 @@ mobileCards.appendChild(mobileCard);
             onclick="deleteShipment(${shipment.id})">
             DELETE
           </button>
+          
+            </div>
         </td>
       `;
 
