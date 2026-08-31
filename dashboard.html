@@ -1447,6 +1447,30 @@ ETA: ${eta}`;
     );
 
   document
+    .getElementById("uploadPodButton")
+    .addEventListener("click", async function () {
+
+        const trackingNumber =
+            document.getElementById("updateTrackingNumber").value.trim();
+
+        if (!trackingNumber) {
+            alert("Please enter a tracking number first.");
+            return;
+        }
+
+        const shipment = shipments.find(
+            s => (s.tracking_number || "").trim().toLowerCase() === trackingNumber.toLowerCase()
+        );
+
+        if (!shipment) {
+            alert("Shipment not found.");
+            return;
+        }
+
+        await uploadPOD(shipment.id, shipment.tracking_number);
+    });
+
+  document
     .getElementById("addUpdateButton")
     .addEventListener("click", async function () {
 
