@@ -951,10 +951,13 @@ trackingResult.innerHTML = `
     <strong>${shipment.destination || "-"}</strong>
   </div>
 
-  <div class="route-current">
-    📍 Current Location:
-    <strong>${shipment.current_location || "-"}</strong>
-  </div>
+ ${(shipment.status || "").trim().toLowerCase() !== "delivered"
+    ? `<div class="route-current">
+        📍 Current Location:
+        <strong>${shipment.current_location || "-"}</strong>
+       </div>`
+    : ""
+}
 
 </div>
  ${timelineHTML}
