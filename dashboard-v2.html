@@ -1,0 +1,1695 @@
+f<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBA Operations Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+    background: #0f1012;
+    color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+
+   header {
+    background: #0a0a0b;
+    color: white;
+    padding: 18px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 1px solid #2b2b2b;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+    
+    .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-brand img {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+}
+
+.header-brand span {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+    header button {
+    background: transparent;
+    color: #f58220;
+    border: 1px solid #f58220;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+header button:hover {
+    background: #f58220;
+    color: #ffffff;
+}
+
+    .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+    .card {
+    background: #17181b;
+    color: #f5f5f5;
+    border: 1px solid #2a2b2f;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.22);
+}
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #b8b8b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+    input,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    background: #111111;
+    color: #ffffff;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #f58220;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+    .btn-primary {
+      background: #f58220;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #222;
+      color: white;
+    }
+
+    .btn-delete {
+      background: #c62828;
+      color: white;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .search-row select {
+  width: 180px;
+  min-width: 180px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: #222;
+  font-weight: 600;
+  cursor: pointer;
+}
+    
+    .search-row button {
+  width: auto;
+  min-width: 110px;
+}
+
+    .search-row input {
+      flex: 1;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #222;
+      color: white;
+      padding: 12px;
+      text-align: left;
+    }
+
+    td {
+      border-bottom: 1px solid #ddd;
+      padding: 12px;
+    }
+
+    tr:hover {
+      background: #fafafa;
+    }
+
+    .edit-btn {
+      background: #f58220;
+      color: white;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .delete-btn {
+      background: #c62828;
+      color: white;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 15px;
+      }
+    }
+    .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f8f8f8);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+  border-left: 5px solid #f58220;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .delayed-card.alert {
+  border-left-color: #dc3545;
+  background: #fff5f5;
+}
+
+.delayed-card.alert .stat-number {
+  color: #dc3545;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+}
+ .stat-card.selected {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 3px rgba(245, 130, 34, 0.25),
+                0 8px 22px rgba(0,0,0,0.12);
+    border-left-color: #f58220;
+    background: #fff8f2;
+}   
+
+.stat-icon {
+  font-size: 34px;
+}
+
+.stat-label {
+  color: #777;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.stat-number {
+  font-size: 30px;
+  font-weight: 800;
+  color: #222;
+}
+
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.delayed-row {
+  background: #fff1f1 !important;
+}
+
+.delayed-row td {
+  color: #b42318;
+  font-weight: 600;
+}
+
+    .delay-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 7px;
+  border-radius: 20px;
+  background: #dc3545;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+      .overdue-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+    #mobileShipmentCards {
+    display: none;
+}
+
+.mobile-shipment-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-left: 5px solid #F58220;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.mobile-card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.mobile-card-top strong {
+    color: #F58220;
+    font-size: 17px;
+}
+
+.mobile-route {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 14px;
+}
+
+.mobile-card-details {
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.mobile-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.mobile-card-actions button {
+    flex: 1;
+}
+
+.delayed-mobile-card {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+      
+     #mobileShipmentCards {
+    display: none;
+}
+    
+ @media (min-width: 601px) {
+    #mobileShipmentCards {
+        display: none !important;
+    }
+
+    .table-wrapper {
+        display: block !important;
+    }
+}
+
+@media (max-width: 600px) {
+    #mobileShipmentCards {
+        display: block !important;
+    }
+
+    .table-wrapper {
+        display: none !important;
+    }
+
+    .container {
+        padding: 0 10px;
+        margin: 15px auto;
+    }
+
+    header {
+        padding: 12px 15px;
+    }
+
+    .header-brand {
+        gap: 8px;
+    }
+
+    .header-brand img {
+        height: 40px;
+    }
+
+    .header-brand span {
+        font-size: 17px;
+    }
+
+    header button {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-row input,
+    .search-row select,
+    .search-row button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 900px;
+
+      .card {
+    padding: 18px;
+    border-radius: 14px;
+}
+
+.stat-card {
+    min-height: 110px;
+}
+
+.stat-icon {
+    font-size: 28px;
+}
+
+.stat-label {
+    font-size: 13px;
+}
+
+.stat-number {
+    font-size: 28px;
+}
+
+.form-grid input,
+.form-grid select {
+    padding: 11px 12px;
+    font-size: 16px;
+}
+
+.form-grid label {
+    margin-bottom: 5px;
+}
+
+.actions {
+    margin-top: 12px;
+}
+    }
+}
+
+    .delay-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #fff1f1;
+    color: #b42318;
+    border: 1px solid #f5b7b1;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+  </style>
+</head>
+
+<body>
+
+<header>
+<div class="header-brand">
+  <img src="logo.webp" alt="HBA Logo">
+  <span>Operations</span>
+</div>
+  
+  <button id="logoutButton">LOGOUT</button>
+</header>
+
+<div class="container">
+  <div class="stats-grid">
+
+<div class="stat-card active-card">
+    <div class="stat-icon">🚛</div>
+    <div>
+      <div class="stat-label">Active Shipments</div>
+      <div class="stat-number" id="activeCount">0</div>
+    </div>
+  </div>
+
+  <div class="stat-card border-card">
+    <div class="stat-icon">🛃</div>
+    <div>
+      <div class="stat-label">At Border</div>
+      <div class="stat-number" id="borderCount">0</div>
+    </div>
+  </div>
+
+ <div class="stat-card delivered-card">
+    <div class="stat-icon">✅</div>
+    <div>
+      <div class="stat-label">Delivered</div>
+      <div class="stat-number" id="deliveredCount">0</div>
+    </div>
+  </div>
+
+  <div class="stat-card total-card">
+    <div class="stat-icon">📦</div>
+    <div>
+      <div class="stat-label">Total Shipments</div>
+      <div class="stat-number" id="totalCount">0</div>
+    </div>
+  </div>
+    
+<div class="stat-card delayed-card">
+  <div class="stat-icon">⚠️</div>
+  <div>
+    <div class="stat-label">Delayed Shipments</div>
+    <div class="stat-number" id="delayedCount">0</div>
+  </div>
+</div>
+
+    <div class="stat-card overdue-card">
+    <div class="stat-icon">⏰</div>
+    <div>
+        <div class="stat-title">Overdue Shipments</div>
+        <div class="stat-number" id="overdueCount">0</div>
+    </div>
+</div>
+    
+    
+</div>
+  <div class="card">
+    <h2>Shipment Management</h2>
+
+    <input type="hidden" id="shipmentId">
+
+    <div class="form-grid">
+
+      <div>
+        <label>Tracking Number</label>
+        <input id="trackingNumber" placeholder="HBA-2026-0001">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="Pending">Pending</option>
+          <option value="Loading">Loading</option>
+          <option value="In Transit">In Transit</option>
+          <option value="At Border">At Border</option>
+          <option value="Customs Clearance">Customs Clearance</option>
+          <option value="Out for Delivery">Out for Delivery</option>
+          <option value="Delivered">Delivered</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Origin</label>
+        <input id="origin" placeholder="Dubai, UAE">
+      </div>
+
+      <div>
+        <label>Destination</label>
+        <input id="destination" placeholder="Amman, Jordan">
+      </div>
+
+      <div>
+        <label>Current Location</label>
+        <input id="currentLocation" placeholder="Al Haditha Border">
+      </div>
+
+      <div>
+        <label>Truck Number</label>
+        <input id="truckNumber" placeholder="70546 DXB">
+      </div>
+
+      <div>
+        <label>Driver Name</label>
+        <input id="driverName" placeholder="Driver name">
+      </div>
+
+      <div>
+        <label>ETA</label>
+        <input type="date" id="eta">
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="saveButton">
+        ADD SHIPMENT
+      </button>
+
+      <button class="btn btn-secondary" id="clearButton">
+        CLEAR
+      </button>
+    </div>
+
+    <div id="message"></div>
+  </div>
+
+<div class="card update-card">
+    <h2>Shipment Update</h2>
+
+    <div class="form-grid">
+        <div>
+            <label>Tracking Number</label>
+            <input id="updateTrackingNumber" placeholder="HBA-2026-0001">
+        </div>
+
+        <div>
+            <label>Location</label>
+            <input id="updateLocation" placeholder="Al-Omari">
+        </div>
+
+        <div>
+            <label>Update / Note</label>
+            <input id="updateMessage" placeholder="Customs clearance in progress">
+        </div>
+
+        <div>
+            <label>Date & Time</label>
+            <input type="datetime-local" id="updateDateTime">
+        </div>
+
+      <div class="delay-update-option">
+  <label>
+    <input type="checkbox" id="updateDelayed">
+    Mark shipment as delayed
+  </label>
+</div>
+
+      <div>
+  <label>Delay Reason</label>
+  <input
+    id="updateDelayReason"
+    placeholder="Example: Border congestion, customs delay, ferry delay"
+  >
+</div>
+
+    <div class="actions">
+        <button class="btn btn-primary" id="addUpdateButton">
+            ADD UPDATE
+        </button>
+
+      <button class="btn btn-secondary" id="uploadPodButton">
+          UPLOAD POD
+        </button>
+      
+      <input
+    type="file"
+    id="podFileInput"
+    accept=".pdf,.jpg,.jpeg,.png"
+    style="display:none;"
+>
+      
+    </div>
+
+    <div id="updateMessageBox"></div>
+</div>
+  
+  <div class="card">
+    <h2>All Shipments</h2>
+
+    <div class="search-row">
+  <input
+    id="searchInput"
+    placeholder="Search tracking number, driver, truck or destination..."
+  >
+
+  <select id="statusFilter">
+    <option value="all">All Shipments</option>
+    <option value="active">Active</option>
+    <option value="delayed">Delayed Shipments</option>
+    <option value="at border">At Border</option>
+   
+    <option value="overdue">Overdue Shipments</option>
+    <option value="delivered">Delivered</option>
+  </select>
+
+  <button class="btn btn-primary" id="refreshButton">
+    REFRESH
+  </button>
+</div>
+
+    <div id="mobileShipmentCards" style="display:none;"></div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Tracking</th>
+            <th>Status</th>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th>Location</th>
+            <th>Driver</th>
+            <th>Truck</th>
+            <th>ETA</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="shipmentTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  const supabaseUrl =
+    "https://htrcvdnmfodamoatqucb.supabase.co";
+
+  const supabaseKey =
+    "sb_publishable_55sANLOQ8OvI822POQnCDg_NebnhOyN";
+
+  const db =
+    supabase.createClient(supabaseUrl, supabaseKey);
+
+
+  const message =
+    document.getElementById("message");
+
+  let shipments = [];
+
+
+  async function checkLogin() {
+
+    const {
+      data: { session }
+    } = await db.auth.getSession();
+
+    if (!session) {
+      window.location.href = "admin.html";
+      return false;
+    }
+
+    return true;
+  }
+
+
+  async function loadShipments() {
+
+    const loggedIn = await checkLogin();
+
+    if (!loggedIn) return;
+
+    const { data, error } =
+      await db
+        .from("Shipments")
+        .select("*")
+        .order("id", {
+          ascending: false
+        });
+
+    if (error) {
+      console.error(error);
+      message.style.color = "red";
+      message.textContent =
+        "Unable to load shipments.";
+      return;
+    }
+
+    shipments = data || [];
+    const total = shipments.length;
+
+const delivered = shipments.filter(
+  s => (s.status || "").toLowerCase() === "delivered"
+).length;
+
+const atBorder = shipments.filter(
+  s => (s.status || "").toLowerCase() === "at border"
+).length;
+
+const active = shipments.filter(
+  s => (s.status || "").toLowerCase() !== "delivered"
+).length;
+
+document.getElementById("totalCount").textContent = total;
+document.getElementById("deliveredCount").textContent = delivered;
+document.getElementById("borderCount").textContent = atBorder;
+document.getElementById("activeCount").textContent = active;
+
+   
+const delayed = shipments.filter(
+    s => s.delayed === true
+).length;
+
+    document.getElementById("delayedCount").textContent = delayed;
+
+    const todayStart = new Date();
+todayStart.setHours(0, 0, 0, 0);
+
+const overdue = shipments.filter(s => {
+    const status = (s.status || "").trim().toLowerCase();
+
+    if (!s.eta || status === "delivered") {
+        return false;
+    }
+
+    const etaDate = new Date(s.eta + "T00:00:00");
+
+    return etaDate < todayStart;
+}).length;
+
+document.getElementById("overdueCount").textContent = overdue;
+
+    const delayedCard = document.querySelector(".delayed-card");
+
+if (delayedCard) {
+  delayedCard.classList.toggle("alert", delayed > 0);
+  
+  delayedCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "delayed";
+        applyFilters();
+    };
+}
+
+    const overdueCard = document.querySelector(".overdue-card");
+
+if (overdueCard) {
+    overdueCard.classList.toggle("alert", overdue > 0);
+
+    overdueCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "overdue";
+        applyFilters();
+    };
+}
+
+    const activeCard = document.querySelector(".active-card");
+const borderCard = document.querySelector(".border-card");
+const deliveredCard = document.querySelector(".delivered-card");
+const totalCard = document.querySelector(".total-card");
+
+if (activeCard) {
+    activeCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "active";
+        applyFilters();
+    };
+}
+
+if (borderCard) {
+    borderCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "at border";
+        applyFilters();
+    };
+}
+
+if (deliveredCard) {
+    deliveredCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "delivered";
+        applyFilters();
+    };
+}
+
+if (totalCard) {
+    totalCard.onclick = () => {
+        const statusFilter = document.getElementById("statusFilter");
+        statusFilter.value = "all";
+        applyFilters();
+    };
+}
+
+   document.querySelectorAll(".stat-card").forEach(card => {
+    if (card.dataset.selectBound) return;
+
+    card.dataset.selectBound = "true";
+
+    card.addEventListener("click", () => {
+        document.querySelectorAll(".stat-card").forEach(c => {
+            c.classList.remove("selected");
+        });
+
+        card.classList.add("selected");
+    });
+});
+    
+    renderShipments(shipments);
+  }
+
+
+  function renderShipments(list) {
+
+    const table =
+      document.getElementById("shipmentTable");
+    
+    const mobileCards =
+    document.getElementById("mobileShipmentCards");
+
+    table.innerHTML = "";
+    mobileCards.innerHTML = "";
+
+    list.forEach(function(shipment) {
+
+      const row =
+        document.createElement("tr");
+      
+      const status = (shipment.status || "").trim().toLowerCase();
+
+const isDelayed = shipment.delayed === true;
+
+let isOverdue = false;
+
+if (shipment.eta && status !== "delivered") {
+    const etaDate = new Date(shipment.eta + "T00:00:00");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    isOverdue = etaDate < today;
+}
+      
+if (isDelayed) {
+  row.classList.add("delayed-row");
+}
+      
+const formattedETA = shipment.eta
+  ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })
+  : "-";
+      
+      const formattedLastUpdate = shipment.last_update
+    ? new Date(shipment.last_update).toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    : "-";
+
+      const mobileCard = document.createElement("div");
+mobileCard.className = isDelayed
+    ? "mobile-shipment-card delayed-mobile-card"
+    : "mobile-shipment-card";
+
+mobileCard.innerHTML = `
+    <div class="mobile-card-top">
+        <strong>${shipment.tracking_number || "-"}</strong>
+        <span>
+            ${shipment.status || "-"}
+            ${isDelayed ? '<span class="delay-badge">DELAYED</span>' : ''}
+            ${isOverdue ? `<span class="overdue-badge">OVERDUE</span>` : ""}
+        </span>
+    </div>
+
+    <div class="mobile-route">
+        ${shipment.origin || "-"} → ${shipment.destination || "-"}
+    </div>
+
+    <div class="mobile-card-details">
+        <div>📍 <strong>Location:</strong> ${shipment.current_location || "-"}</div>
+        <div>👤 <strong>Driver:</strong> ${shipment.driver_name || "-"}</div>
+        <div>🚛 <strong>Truck:</strong> ${shipment.truck_number || "-"}</div>
+        <div>📅 <strong>ETA:</strong> ${formattedETA}</div>
+        <div>🕒 <strong>Updated:</strong> ${formattedLastUpdate}</div>
+    </div>
+
+    <div class="mobile-card-actions">
+        <button class="edit-btn"
+            onclick="editShipment(${shipment.id})">
+            EDIT
+        </button>
+
+        <button class="delete-btn"
+            onclick="deleteShipment(${shipment.id})">
+            DELETE
+        </button>
+    </div>
+`;
+
+mobileCards.appendChild(mobileCard);
+      
+      row.innerHTML = `
+        <td>${shipment.tracking_number || "-"}</td>
+      <td>
+  ${shipment.status || "-"}
+  ${isDelayed ? '<span class="delay-badge">DELAYED</span>' : ''}
+  ${isOverdue ? `<span class="overdue-badge">OVERDUE</span>` : ""}
+</td>
+        <td>${shipment.origin || "-"}</td>
+        <td>${shipment.destination || "-"}</td>
+        <td>${shipment.current_location || "-"}</td>
+        <td>${shipment.driver_name || "-"}</td>
+        <td>${shipment.truck_number || "-"}</td>
+        <td>${formattedETA}</td>
+        <td>${formattedLastUpdate}</td>
+
+        <td>
+          <button
+            class="edit-btn"
+            onclick="editShipment(${shipment.id})">
+            EDIT
+          </button>
+
+          <button
+             class="edit-btn"
+             onclick="copyShipmentUpdate(${shipment.id})">
+            COPY UPDATE
+        </button>
+
+        <button
+            class="edit-btn"
+           onclick="copyTrackingLink('${shipment.tracking_number}')">
+           COPY LINK
+       </button>
+
+       <button
+    class="edit-btn"
+    onclick="uploadPOD(${shipment.id}, '${shipment.tracking_number}')">
+    UPLOAD POD
+</button>
+
+<button
+    class="edit-btn"
+    onclick="viewPOD('${shipment.pod_path || ""}')">
+    VIEW POD
+</button>
+
+         <button
+            class="delete-btn"
+            onclick="deleteShipment(${shipment.id})">
+            DELETE
+          </button>
+        </td>
+      `;
+
+      table.appendChild(row);
+    });
+  }
+
+
+  document
+    .getElementById("saveButton")
+    .addEventListener(
+      "click",
+      async function() {
+
+        const id =
+          document.getElementById("shipmentId").value;
+
+      let trackingNumber =
+  document.getElementById("trackingNumber")
+    .value.trim();
+
+if (!id) {
+  const { data: newTracking, error: trackingError } =
+    await db.rpc("generate_hba_tracking_number");
+
+  if (trackingError) {
+    console.error(trackingError);
+    message.style.color = "red";
+    message.textContent =
+      "Unable to generate tracking number.";
+    return;
+  }
+
+  trackingNumber = newTracking;
+
+  document.getElementById("trackingNumber").value =
+    trackingNumber;
+}
+
+        const shipmentData = {
+
+          tracking_number:
+            trackingNumber,
+
+          status:
+            document.getElementById("status").value,
+
+          origin:
+            document.getElementById("origin")
+              .value.trim(),
+
+          destination:
+            document.getElementById("destination")
+              .value.trim(),
+
+          current_location:
+            document.getElementById("currentLocation")
+              .value.trim(),
+
+          truck_number:
+            document.getElementById("truckNumber")
+              .value.trim(),
+
+          driver_name:
+            document.getElementById("driverName")
+              .value.trim(),
+
+          eta:
+            document.getElementById("eta").value || null,
+
+          last_update:
+            new Date().toISOString()
+        };
+
+
+        let result;
+
+        if (id) {
+
+          result =
+            await db
+              .from("Shipments")
+              .update(shipmentData)
+              .eq("id", id);
+
+        } else {
+
+          result =
+            await db
+              .from("Shipments")
+              .insert([shipmentData]);
+        }
+
+
+        if (result.error) {
+
+          console.error(result.error);
+
+          message.style.color = "red";
+
+          message.textContent =
+            result.error.message;
+
+          return;
+        }
+
+
+        message.style.color = "green";
+
+        message.textContent =
+          id
+            ? "Shipment updated successfully."
+            : "Shipment added successfully.";
+
+
+        clearForm();
+
+        loadShipments();
+      }
+    );
+
+
+  function editShipment(id) {
+
+    const shipment =
+      shipments.find(
+        item => String(item.id) === String(id)
+      );
+
+    if (!shipment) return;
+
+
+    document.getElementById("shipmentId").value =
+      shipment.id;
+
+    document.getElementById("trackingNumber").value =
+      shipment.tracking_number || "";
+
+    document.getElementById("status").value =
+      shipment.status || "Pending";
+
+    document.getElementById("origin").value =
+      shipment.origin || "";
+
+    document.getElementById("destination").value =
+      shipment.destination || "";
+
+    document.getElementById("currentLocation").value =
+      shipment.current_location || "";
+
+    document.getElementById("truckNumber").value =
+      shipment.truck_number || "";
+
+    document.getElementById("driverName").value =
+      shipment.driver_name || "";
+
+    document.getElementById("eta").value =
+      shipment.eta || "";
+
+    document.getElementById("saveButton").textContent =
+      "UPDATE SHIPMENT";
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  async function copyShipmentUpdate(id) {
+    const { data: shipment, error } = await db
+        .from("Shipments")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error || !shipment) {
+        alert("Unable to copy shipment update.");
+        return;
+    }
+
+    const eta = shipment.eta
+        ? new Date(shipment.eta + "T00:00:00").toLocaleDateString("en-GB")
+        : "-";
+
+    const text =
+`HBA Shipment Update
+
+Tracking: ${shipment.tracking_number || "-"}
+Route: ${shipment.origin || "-"} → ${shipment.destination || "-"}
+Status: ${shipment.status || "-"}
+Current Location: ${shipment.current_location || "-"}
+ETA: ${eta}`;
+
+    await navigator.clipboard.writeText(text);
+
+    alert("Shipment update copied!");
+}
+
+  async function copyTrackingLink(trackingNumber) {
+    const link =
+        window.location.origin +
+        window.location.pathname.replace("dashboard.html", "") +
+        "?tracking=" +
+        encodeURIComponent(trackingNumber);
+
+    await navigator.clipboard.writeText(link);
+
+    alert("Tracking link copied!");
+}
+  
+  async function uploadPOD(id, trackingNumber) {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".pdf,.jpg,.jpeg,.png";
+
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const filePath =
+            trackingNumber + "/" + Date.now() + "_" + safeName;
+
+        const { error: uploadError } = await db.storage
+            .from("pod-files")
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error(uploadError);
+            alert("POD upload failed: " + uploadError.message);
+            return;
+        }
+
+        const { error: updateError } = await db
+            .from("Shipments")
+            .update({ pod_path: filePath })
+            .eq("id", id);
+
+        if (updateError) {
+            console.error(updateError);
+            alert("POD uploaded, but shipment record could not be updated.");
+            return;
+        }
+
+        alert("POD uploaded successfully!");
+        loadShipments();
+    };
+
+    input.click();
+}
+
+   async function viewPOD(podPath) {
+    if (!podPath) {
+        alert("No POD uploaded for this shipment.");
+        return;
+    }
+
+    const { data, error } = await db.storage
+        .from("pod-files")
+        .createSignedUrl(podPath, 60);
+
+    if (error || !data) {
+        console.error(error);
+        alert("Unable to open POD.");
+        return;
+    }
+
+    window.open(data.signedUrl, "_blank");
+}
+  
+  async function deleteShipment(id) {
+
+    const confirmed =
+      confirm(
+        "Are you sure you want to delete this shipment?"
+      );
+
+    if (!confirmed) return;
+
+
+    const { error } =
+      await db
+        .from("Shipments")
+        .delete()
+        .eq("id", id);
+
+
+    if (error) {
+
+      console.error(error);
+
+      alert(
+        "Unable to delete shipment: " +
+        error.message
+      );
+
+      return;
+    }
+
+
+    loadShipments();
+  }
+
+
+  function clearForm() {
+
+    document.getElementById("shipmentId").value = "";
+
+    document.getElementById("trackingNumber").value = "";
+
+    document.getElementById("status").value =
+      "Pending";
+
+    document.getElementById("origin").value = "";
+
+    document.getElementById("destination").value = "";
+
+    document.getElementById("currentLocation").value = "";
+
+    document.getElementById("truckNumber").value = "";
+
+    document.getElementById("driverName").value = "";
+
+    document.getElementById("eta").value = "";
+
+    document.getElementById("saveButton").textContent =
+      "ADD SHIPMENT";
+  }
+
+
+  document
+    .getElementById("clearButton")
+    .addEventListener(
+      "click",
+      clearForm
+    );
+
+
+  document
+    .getElementById("refreshButton")
+    .addEventListener(
+      "click",
+      loadShipments
+    );
+
+  document
+    .getElementById("addUpdateButton")
+    .addEventListener("click", async function () {
+
+        const trackingNumber =
+            document.getElementById("updateTrackingNumber").value.trim();
+
+        const location =
+            document.getElementById("updateLocation").value.trim();
+
+        const message =
+            document.getElementById("updateMessage").value.trim();
+
+        const dateTime =
+            document.getElementById("updateDateTime").value;
+
+        const isDelayed =
+             document.getElementById("updateDelayed").checked;
+
+        const delayReason =
+             document.getElementById("updateDelayReason").value.trim();
+
+      if (isDelayed && !delayReason) {
+    messageBox.style.color = "red";
+    messageBox.textContent = "Please enter a delay reason.";
+    return;
+}
+
+        const messageBox =
+            document.getElementById("updateMessageBox");
+
+        if (!trackingNumber || !message) {
+            messageBox.style.color = "red";
+            messageBox.textContent =
+                "Tracking number and update note are required.";
+            return;
+        }
+
+       const shipment = shipments.find(s =>
+    String(s.tracking_number || "")
+        .trim()
+        .toLowerCase() === trackingNumber
+            .trim()
+            .toLowerCase()
+);
+
+        if (!shipment) {
+            messageBox.style.color = "red";
+            messageBox.textContent = "Shipment not found.";
+            return;
+        }
+
+       const history = Array.isArray(shipment.shipment_history)
+    ? shipment.shipment_history
+    : [];
+
+        history.unshift({
+            date: dateTime
+                ? new Date(dateTime).toISOString()
+                : new Date().toISOString(),
+            location: location || "",
+            message: message
+        });
+
+      const updateText = `${location} ${message}`.toLowerCase();
+
+let autoStatus = null;
+
+if (
+    updateText.includes("delivered") ||
+    updateText.includes("delivery completed")
+) {
+    autoStatus = "Delivered";
+}
+else if (updateText.includes("out for delivery")) {
+    autoStatus = "Out for Delivery";
+}
+else if (
+    updateText.includes("customs clearance") ||
+    updateText.includes("customs") ||
+    updateText.includes("clearance in progress")
+) {
+    autoStatus = "Customs Clearance";
+}
+else if (
+    updateText.includes("border") ||
+    updateText.includes("at border")
+) {
+    autoStatus = "At Border";
+}
+else if (
+    updateText.includes("in transit") ||
+    updateText.includes("departed") ||
+    updateText.includes("on the way")
+) {
+    autoStatus = "In Transit";
+}
+ else if (
+    updateText.includes("offloading") ||
+    updateText.includes("unloading") ||
+    updateText.includes("waiting for offloading")
+) {
+    autoStatus = "Out for Delivery";
+} 
+else if (
+    /\bloading\b/.test(updateText) ||
+    updateText.includes("being loaded")
+) {
+    autoStatus = "Loading";
+}
+      
+     const updateData = {
+    shipment_history: history,
+    last_update: new Date().toISOString(),
+    delayed: isDelayed,
+    delay_reason: isDelayed ? delayReason : null
+};
+
+if (location) {
+    updateData.current_location = location;
+}
+      if (autoStatus) {
+    updateData.status = autoStatus;
+}
+
+const { error: updateError } =
+    await db
+        .from("Shipments")
+        .update(updateData)
+        .eq("id", shipment.id);
+
+        if (updateError) {
+            console.error(updateError);
+
+            messageBox.style.color = "red";
+            messageBox.textContent =
+                "Error: " + updateError.message; 
+
+            return;
+        }
+
+        messageBox.style.color = "green";
+        messageBox.textContent =
+             "Shipment update added successfully.";
+
+        document.getElementById("updateLocation").value = "";
+        document.getElementById("updateMessage").value = "";
+        document.getElementById("updateDateTime").value = "";
+        document.getElementById("updateDelayed").checked = false;
+        document.getElementById("updateDelayReason").value = "";
+
+        loadShipments();
+    });
+
+
+ function applyFilters() {
+  const search = document
+    .getElementById("searchInput")
+    .value
+    .toLowerCase()
+    .trim();
+
+  const selectedStatus =
+    document.getElementById("statusFilter").value;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const filtered = shipments.filter(function(s) {
+
+    const matchesSearch =
+      (s.tracking_number || "").toLowerCase().includes(search) ||
+      (s.driver_name || "").toLowerCase().includes(search) ||
+      (s.truck_number || "").toLowerCase().includes(search) ||
+      (s.destination || "").toLowerCase().includes(search);
+
+    if (!matchesSearch) return false;
+
+    const status = (s.status || "").trim().toLowerCase();
+
+    if (selectedStatus === "all") {
+      return true;
+    }
+
+    if (selectedStatus === "delayed") {
+    return s.delayed === true;
+}
+
+    if (selectedStatus === "overdue") {
+    if (!s.eta || status === "delivered") {
+        return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const etaDate = new Date(s.eta + "T00:00:00");
+
+    return etaDate < today;
+}
+
+    if (selectedStatus === "active") {
+      return status !== "delivered";
+    }
+
+   if (selectedStatus === "at-border") {
+    return status === "at border";
+}
+
+    if (selectedStatus === "delivered") {
+      return status === "delivered";
+    }
+
+    return true;
+  });
+
+  renderShipments(filtered);
+}
+
+document
+  .getElementById("searchInput")
+  .addEventListener("input", applyFilters);
+
+document
+  .getElementById("statusFilter")
+  .addEventListener("change", applyFilters);
+
+  document
+    .getElementById("logoutButton")
+    .addEventListener(
+      "click",
+      async function() {
+
+        await db.auth.signOut();
+
+        window.location.href =
+          "admin.html";
+      }
+    );
+
+
+  loadShipments();
+
+</script>
+
+</body>
+</html>
