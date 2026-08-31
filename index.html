@@ -794,6 +794,62 @@ background:
         font-size: 23px;
     }
 }
+
+    .site-footer {
+    width: 100%;
+    margin-top: 35px;
+    padding: 22px 15px;
+    text-align: center;
+    background: #111214;
+    border-top: 2px solid #f58220;
+    box-sizing: border-box;
+}
+
+.footer-contact {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 9px;
+}
+
+.footer-contact a,
+.footer-contact a:visited {
+    color: #bbbbbb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.footer-contact a:hover {
+    color: #f58220;
+}
+
+.footer-divider {
+    color: #666;
+}
+
+.footer-designed {
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.footer-designed strong {
+    color: #f58220;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .footer-contact {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .footer-divider {
+        display: none;
+    }
+}
     
   </style>
   
@@ -846,40 +902,27 @@ background:
   </div>
 </section>
 
-<section class="services" id="services">
+<footer class="site-footer">
 
-  <h2>Our Transport Services</h2>
+    <div class="footer-contact">
 
-  <div class="service-container">
+        <a href="mailto:Ayoubski414@gmail.com">
+            ✉ Ayoubski414@gmail.com
+        </a>
 
-    <div class="service">
-      <h3>🚛 Road Freight</h3>
-      <p>
-        Reliable trucking solutions for local and international shipments.
-      </p>
+        <span class="footer-divider">|</span>
+
+        <a href="tel:+971505615439">
+            ☎ +971 50 561 5439
+        </a>
+
     </div>
 
-    <div class="service">
-      <h3>📦 Shipment Tracking</h3>
-      <p>
-        Track your cargo using your unique HBA tracking number.
-      </p>
+    <div class="footer-designed">
+        Designed & Developed by <strong>Ayoub Yousfi</strong>
     </div>
 
-    <div class="service">
-      <h3>🌍 GCC Transport</h3>
-      <p>
-        Cross-border transportation throughout the GCC and Middle East.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-<footer>
-  © 2026 Ayoub Yousfi. All Rights Reserved.
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
   const supabaseUrl = "https://htrcvdnmfodamoatqucb.supabase.co";
