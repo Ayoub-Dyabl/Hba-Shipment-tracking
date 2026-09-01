@@ -895,9 +895,9 @@ background:
     id="trackingNumber"
     placeholder="Enter HBA tracking number"
   >
-  <button id="trackButton">
+   <button id="trackButton" type="button">
     TRACK SHIPMENT →
-  </button>
+   </button>
 </div>
       <div id="trackingResult"></div>
       
@@ -963,7 +963,7 @@ if (trackingFromLink) {
     });
 
     trackButton.disabled = false;
-    trackButton.textContent = "TRACK";
+    trackButton.textContent = "TRACK SHIPMENT →";
 
     if (error) {
       console.error(error);
