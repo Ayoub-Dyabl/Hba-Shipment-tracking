@@ -957,6 +957,104 @@ background:
     font-size: 28px;
     cursor: pointer;
 }
+
+    /* =========================
+   MEET OUR TEAM
+========================= */
+
+.team-section {
+    padding: 60px 20px;
+    background: #15171b;
+    text-align: center;
+}
+
+.team-section h2 {
+    color: #ffffff;
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.team-subtitle {
+    color: #d0d0d0;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+.team-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.team-card {
+    background: #1b1e23;
+    border: 1px solid #34383f;
+    border-radius: 14px;
+    padding: 25px 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: 0.25s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-4px);
+    border-color: #f58220;
+}
+
+.team-card img {
+    width: 115px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #f58220;
+    margin-bottom: 15px;
+}
+
+.team-card h3 {
+    color: #ffffff;
+    font-size: 18px;
+    margin: 5px 0 10px;
+}
+
+.team-line {
+    width: 45px;
+    height: 2px;
+    background: #f58220;
+    margin: 0 auto 12px;
+}
+
+.team-card h4 {
+    color: #f58220;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.team-card p {
+    color: #d8d8d8;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-section {
+        padding: 45px 16px;
+    }
+}
     
   </style>
   
@@ -1405,9 +1503,104 @@ contactModal.addEventListener("click", function(e) {
 
         </div>
 
+      <!-- MEET OUR TEAM -->
+<section class="team-section">
+
+    <h2>Meet Our Team</h2>
+    <p class="team-subtitle">
+        This is the team of HBA Logistic.<br>
+        We are here to serve you!
+    </p>
+
+    <div class="team-grid">
+
+        <div class="team-card">
+            <img src="basem-kanaan.jpg.webp" alt="Basem Kanaan">
+            <h3>Basem Kanaan</h3>
+            <div class="team-line"></div>
+            <h4>Founder</h4>
+            <p>
+                The visionary founder who built our logistics legacy on trust,
+                innovation, and world-class delivery.
+            </p>
+        </div>
+
+        <div class="team-card">
+            <img src="abdul-hameed-kanaan.jpg.webp" alt="Abdul Hameed Kanaan">
+            <h3>Abdul Hameed Kanaan</h3>
+            <div class="team-line"></div>
+            <h4>CEO</h4>
+            <p>
+                Transforming logistics with bold decisions, advanced solutions,
+                and unwavering dedication.
+            </p>
+        </div>
+
+        <div class="team-card">
+            <img src="marwan-bashir.jpg.webp" alt="Marwan Bashir">
+            <h3>Marwan Bashir</h3>
+            <div class="team-line"></div>
+            <h4>Operation Manager</h4>
+            <p>
+                Ensuring precision, clarity, and performance across every
+                operational insight and decision.
+            </p>
+        </div>
+
+        <div class="team-card">
+            <img src="basheer-al-rafai.jpg.webp" alt="Basheer Al Rafai">
+            <h3>Basheer Al Rafai</h3>
+            <div class="team-line"></div>
+            <h4>Logistics Manager</h4>
+            <p>
+                Ensuring every shipment reaches its destination safely,
+                efficiently, and right on time.
+            </p>
+        </div>
+
+        <div class="team-card">
+            <img src="mohamad-al-khalid.jpg.webp" alt="Mohamad Al Khalid">
+            <h3>Mohamad Al Khalid</h3>
+            <div class="team-line"></div>
+            <h4>Logistics Expert</h4>
+            <p>
+                Optimizing every movement for speed, cost,
+                and reliability through deep industry expertise.
+            </p>
+        </div>
+
+        <div class="team-card">
+            <img src="ayoub-yousfi.jpg.jpeg" alt="Ayoub Yousfi">
+            <h3>Ayoub Yousfi</h3>
+            <div class="team-line"></div>
+            <h4>Transport Planner</h4>
+            <p>
+                Ensuring every shipment is assigned, routed, and monitored
+                efficiently for safe and timely delivery.
+            </p>
+        </div>
+
+        <div class="team-card">
+            <img src="abd-hakim-ali-mohamed.jpg.jpeg" alt="Abd Hakim Ali Mohamed">
+            <h3>Abd Hakim Ali Mohamed</h3>
+            <div class="team-line"></div>
+            <h4>Accounting Manager</h4>
+            <p>
+                Overseeing financial operations, accurate reporting,
+                budgets, and efficient financial control.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+<!-- END MEET OUR TEAM -->
+
         <div class="contact-section">
 
             <h2>Get In Touch</h2>
+
+          
 
             <div class="contact-grid">
 
