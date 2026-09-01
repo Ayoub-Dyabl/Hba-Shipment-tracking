@@ -910,6 +910,53 @@ background:
     color: #f58220 !important;
     font-size: 26px;
 }
+
+    .contact-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.70);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-modal.show {
+    display: flex;
+}
+
+.contact-modal-box {
+    position: relative;
+    width: 90%;
+    max-width: 420px;
+    background: #1b1e23;
+    border: 1px solid #f58220;
+    border-radius: 15px;
+    padding: 30px;
+    color: white;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+}
+
+.contact-modal-box h2 {
+    color: #f58220;
+    margin-bottom: 20px;
+}
+
+.contact-modal-box p {
+    margin: 12px 0;
+    font-size: 15px;
+}
+
+.contact-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
     
   </style>
   
@@ -926,10 +973,24 @@ background:
   <nav>
     <a href="#">Home</a>
     <a href="#track">Track Shipment</a>
-    <a href="#services">Services</a>
-    <a href="#">Contact</a>
+    <a href="#" id="contactLink">Contact</a>
   </nav>
 </header>
+
+  <div id="contactModal" class="contact-modal">
+  <div class="contact-modal-box">
+    <button id="closeContactModal" class="contact-close">&times;</button>
+
+    <h2>Contact</h2>
+
+    <p>📞 +971 4 554 8071</p>
+    <p>💬 +971 50 561 5439</p>
+    <p>💬 +971 56 806 0067</p>
+    <p>💬 +971 50 492 5316</p>
+    <p>✉ info@hbatransportation.ae</p>
+    <p>✉ abz@hbatransportation.ae</p>
+  </div>
+</div>
 
 <section class="hero" id="track">
   <div class="hero-content">
@@ -1283,6 +1344,25 @@ if (trackingFromLink) {
         }
     });
 
+});
+
+  const contactLink = document.getElementById("contactLink");
+const contactModal = document.getElementById("contactModal");
+const closeContactModal = document.getElementById("closeContactModal");
+
+contactLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    contactModal.classList.add("show");
+});
+
+closeContactModal.addEventListener("click", function() {
+    contactModal.classList.remove("show");
+});
+
+contactModal.addEventListener("click", function(e) {
+    if (e.target === contactModal) {
+        contactModal.classList.remove("show");
+    }
 });
 
 </script>
