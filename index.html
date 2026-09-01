@@ -1212,14 +1212,25 @@ if (trackingFromLink) {
 }
 
 
-  trackingInput.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-      trackShipment();
-    }
-  });
-</script>
+  document.addEventListener("DOMContentLoaded", function () {
 
-  </script>
+    const trackingInput = document.getElementById("trackingNumber");
+    const trackButton = document.getElementById("trackButton");
+
+    trackButton.addEventListener("click", function () {
+        trackShipment();
+    });
+
+    trackingInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            trackShipment();
+        }
+    });
+
+});
+
+</script>
 
 <!-- SERVICES & CONTACT -->
 <section class="public-info-section">
