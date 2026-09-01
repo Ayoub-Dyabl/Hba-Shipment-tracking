@@ -1081,14 +1081,23 @@ background:
 }
 
 .home-content {
-    max-width: 1180px;
+    width: 100%;
+    max-width: 1600px;
     margin: 0 auto;
+    padding: 0 50px;
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr;
     gap: 35px;
     align-items: center;
 }
 
+    @media (max-width: 900px) {
+    .home-content {
+        padding: 0 20px;
+    }
+}
+    
 .home-text {
     text-align: left;
 }
