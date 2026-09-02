@@ -704,6 +704,25 @@ td:last-child .delete-btn {
 
     <div class="form-grid">
 
+     <div>
+    <label>Company</label>
+    <select id="customerCode">
+        <option value="">Select Company</option>
+        <option value="DF">DELTA FOOD</option>
+        <option value="OR">ORONTES</option>
+        <option value="AD">ADAM DAIRY</option>
+        <option value="JY">JAYA</option>
+        <option value="AX">ARAMEX</option>
+        <option value="NU">NUCLEOS</option>
+        <option value="VT">VITAL</option>
+        <option value="MF">M FRESH</option>
+        <option value="AN">ALNASR</option>
+        <option value="TY">TAYSEER</option>
+        <option value="OS">OVER SEA</option>
+        <option value="EG">EMIRATES GRATN</option>
+    </select>
+</div> 
+
       <div>
         <label>Tracking Number</label>
         <input id="trackingNumber" placeholder="HBA-2026-0001">
@@ -748,8 +767,8 @@ td:last-child .delete-btn {
       </div>
 
       <div>
-    <label>Driver Contact</label>
-    <input id="driverContact" placeholder="+971 50 123 4567">
+        <label>Driver Contact</label>
+        <input id="driverContact" placeholder="+971 50 123 4567">
       </div>
 
       <div>
@@ -1239,27 +1258,41 @@ mobileCards.appendChild(mobileCard);
     .value.trim();
 
 if (!id) {
-  const { data: newTracking, error: trackingError } =
-    await db.rpc("generate_hba_tracking_number");
+    const customerCode =
+        document.getElementById("customerCode").value;
 
-  if (trackingError) {
-    console.error(trackingError);
-    message.style.color = "red";
-    message.textContent =
-      "Unable to generate tracking number.";
-    return;
-  }
+    if (!customerCode) {
+        message.style.color = "red";
+        message.textContent = "Please select a company.";
+        return;
+    }
 
-  trackingNumber = newTracking;
+    const { data: newTracking, error: trackingError } =
+        await db.rpc("generate_company_tracking", {
+            p_company_code: customerCode
+        });
 
-  document.getElementById("trackingNumber").value =
-    trackingNumber;
+    if (trackingError) {
+        console.error(trackingError);
+        message.style.color = "red";
+        message.textContent =
+            "Unable to generate tracking number.";
+        return;
+    }
+
+    trackingNumber = newTracking;
+
+    document.getElementById("trackingNumber").value =
+        trackingNumber;
 }
 
         const shipmentData = {
 
           tracking_number:
             trackingNumber,
+
+          customer_code:
+            document.getElementById("customerCode").value || null,
 
           status:
             document.getElementById("status").value,
@@ -1361,6 +1394,9 @@ if (!id) {
 
     document.getElementById("status").value =
       shipment.status || "Pending";
+
+    document.getElementById("customerCode").value =
+      shipment.customer_code || "";
 
     document.getElementById("origin").value =
       shipment.origin || "";
@@ -1533,6 +1569,8 @@ ETA: ${eta}`;
     document.getElementById("shipmentId").value = "";
 
     document.getElementById("trackingNumber").value = "";
+
+    document.getElementById("customerCode").value = "";
 
     document.getElementById("status").value =
       "Pending";
