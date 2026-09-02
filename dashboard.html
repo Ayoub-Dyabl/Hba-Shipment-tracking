@@ -629,6 +629,55 @@ td:last-child .delete-btn {
         display: none !important;
     }
 }
+
+   .company-count-section {
+    margin: 18px 0 24px;
+}
+
+.company-count-section h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.company-count-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.company-count-card {
+    background: #171a1f;
+    border: 1px solid #34383f;
+    border-left: 3px solid #f58220;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+}
+
+.company-count-card span {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.company-count-card strong {
+    font-size: 20px;
+    color: #f58220;
+}
+
+@media (max-width: 900px) {
+    .company-count-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .company-count-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}   
       
   </style>
 </head>
@@ -694,8 +743,75 @@ td:last-child .delete-btn {
         <div class="stat-number" id="overdueCount">0</div>
     </div>
 </div>
-    
-    
+
+    <div class="company-count-section">
+    <h3>Shipments by Company</h3>
+
+    <div class="company-count-grid">
+
+        <div class="company-count-card">
+            <span>ARAMEX</span>
+            <strong id="count-AX">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>DELTA FOOD</span>
+            <strong id="count-DF">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>ORONTES</span>
+            <strong id="count-OR">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>ADAM DAIRY</span>
+            <strong id="count-AD">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>JAYA</span>
+            <strong id="count-JY">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>NUCLEOS</span>
+            <strong id="count-NU">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>VITAL</span>
+            <strong id="count-VT">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>M FRESH</span>
+            <strong id="count-MF">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>ALNASR</span>
+            <strong id="count-AN">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>TAYSEER</span>
+            <strong id="count-TY">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>OVER SEA</span>
+            <strong id="count-OS">0</strong>
+        </div>
+
+        <div class="company-count-card">
+            <span>EMIRATES GRATN</span>
+            <strong id="count-EG">0</strong>
+        </div>
+
+    </div>
+</div>
+       
 </div>
   <div class="card">
     <h2>Shipment Management</h2>
@@ -964,7 +1080,25 @@ td:last-child .delete-btn {
     }
 
     shipments = data || [];
-    const total = shipments.length;
+
+const companyCodes = [
+    "AX", "DF", "OR", "AD", "JY", "NU",
+    "VT", "MF", "AN", "TY", "OS", "EG"
+];
+
+companyCodes.forEach(code => {
+    const count = shipments.filter(
+        s => (s.customer_code || "").toUpperCase() === code
+    ).length;
+
+    const box = document.getElementById(`count-${code}`);
+
+    if (box) {
+        box.textContent = count;
+    }
+});
+
+const total = shipments.length;
 
 const delivered = shipments.filter(
   s => (s.status || "").toLowerCase() === "delivered"
