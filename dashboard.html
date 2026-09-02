@@ -748,6 +748,11 @@ td:last-child .delete-btn {
       </div>
 
       <div>
+    <label>Driver Contact</label>
+    <input id="driverContact" placeholder="+971 50 123 4567">
+      </div>
+
+      <div>
         <label>ETA</label>
         <input type="date" id="eta">
       </div>
@@ -867,6 +872,7 @@ td:last-child .delete-btn {
             <th>Destination</th>
             <th>Location</th>
             <th>Driver</th>
+            <th>Driver Contact</th>
             <th>Truck</th>
             <th>ETA</th>
             <th>Last Updated</th>
@@ -1135,6 +1141,7 @@ mobileCard.innerHTML = `
     <div class="mobile-card-details">
         <div>📍 <strong>Location:</strong> ${shipment.current_location || "-"}</div>
         <div>👤 <strong>Driver:</strong> ${shipment.driver_name || "-"}</div>
+        <div>📞 <strong>Driver Contact:</strong> ${shipment.driver_contact || "-"}</div>
         <div>🚛 <strong>Truck:</strong> ${shipment.truck_number || "-"}</div>
         <div>📅 <strong>ETA:</strong> ${formattedETA}</div>
         <div>🕒 <strong>Updated:</strong> ${formattedLastUpdate}</div>
@@ -1166,6 +1173,7 @@ mobileCards.appendChild(mobileCard);
         <td>${shipment.destination || "-"}</td>
         <td>${shipment.current_location || "-"}</td>
         <td>${shipment.driver_name || "-"}</td>
+        <td>${shipment.driver_contact || "-"}</td>
         <td>${shipment.truck_number || "-"}</td>
         <td>${formattedETA}</td>
         <td>${formattedLastUpdate}</td>        
@@ -1276,6 +1284,10 @@ if (!id) {
             document.getElementById("driverName")
               .value.trim(),
 
+          driver_contact:
+            document.getElementById("driverContact")
+              .value.trim(),
+
           eta:
             document.getElementById("eta").value || null,
 
@@ -1364,6 +1376,9 @@ if (!id) {
 
     document.getElementById("driverName").value =
       shipment.driver_name || "";
+
+    document.getElementById("driverContact").value =
+      shipment.driver_contact || "";
 
     document.getElementById("eta").value =
       shipment.eta || "";
