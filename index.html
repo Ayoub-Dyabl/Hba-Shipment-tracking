@@ -1201,6 +1201,67 @@ background:
         border-top: 4px solid #f58220;
     }
 }
+
+    .driver-contact-menu {
+    display: none;
+    background: #171a1f;
+    border: 1px solid #f58220;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    z-index: 100;
+}
+
+.driver-contact-menu.show {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.driver-menu-title {
+    color: #f58220;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.driver-contact-menu button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    text-align: left;
+}
+
+.driver-contact-menu button:hover {
+    transform: translateY(-1px);
+}
+
+    .driver-number-row {
+    padding: 10px;
+    border-top: 1px solid #34383f;
+    display: grid;
+    grid-template-columns: 1fr 85px 110px;
+    gap: 8px;
+    align-items: center;
+    color: #fff;
+}
+
+.driver-number-row:first-of-type {
+    border-top: none;
+}
+
+.driver-number-row button {
+    padding: 8px 10px;
+    font-size: 12px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .driver-number-row {
+        grid-template-columns: 1fr;
+    }
+}
     
   </style>
   
@@ -1596,6 +1657,8 @@ trackingResult.innerHTML = `
     </div>
 </div>
 
+<div id="driverContactMenu" class="driver-contact-menu"></div>
+
   <div class="detail-card">
     <span class="detail-label">🚛 TRUCK</span>
     <div class="detail-value">
@@ -1685,9 +1748,38 @@ contactModal.addEventListener("click", function(e) {
         return;
     }
 
-    alert(contact);
+   const menu = document.getElementById("driverContactMenu");
+
+const numbers = contact
+    .split(/\s*-\s*/)
+    .map(n => n.trim())
+    .filter(Boolean);
+
+menu.innerHTML = `
+    <div class="driver-menu-title">Driver Contact</div>
+
+    ${numbers.map(number => `
+        <div class="driver-number-row">
+            <div>${number}</div>
+            <button onclick="callDriver('${number}')">📞 Call</button>
+            <button onclick="whatsappDriver('${number}')">💬 WhatsApp</button>
+        </div>
+    `).join("")}
+`;
+
+menu.classList.add("show");
 }
 
+  function callDriver(contact) {
+    const number = contact.split(/\s*-\s*/)[0].replace(/[^\d+]/g, "");
+    window.location.href = "tel:" + number;
+}
+
+function whatsappDriver(contact) {
+    const number = contact.split(/\s*-\s*/)[0].replace(/\D/g, "");
+    window.open("https://wa.me/" + number, "_blank");
+}
+  
 </script>
 
 <!-- SERVICES & CONTACT -->
