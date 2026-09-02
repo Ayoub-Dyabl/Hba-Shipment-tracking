@@ -1589,7 +1589,7 @@ trackingResult.innerHTML = `
     </div>
   </div>
 
-  <div class="detail-card">
+<div class="detail-card" onclick="openDriverContact('${shipment.driver_contact || ""}')" style="cursor:pointer;">
     <span class="detail-label">📞 DRIVER CONTACT</span>
     <div class="detail-value">
         ${shipment.driver_contact || "-"}
@@ -1678,6 +1678,15 @@ contactModal.addEventListener("click", function(e) {
         contactModal.classList.remove("show");
     }
 });
+
+  function openDriverContact(contact) {
+    if (!contact) {
+        alert("No driver contact available.");
+        return;
+    }
+
+    alert(contact);
+}
 
 </script>
 
