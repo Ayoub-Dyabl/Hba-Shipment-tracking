@@ -1201,6 +1201,32 @@ companyCodes.forEach(code => {
     }
 });
 
+    document.querySelectorAll(".company-count-card").forEach(card => {
+    if (card.dataset.companyFilterBound) return;
+    card.dataset.companyFilterBound = "true";
+
+    card.style.cursor = "pointer";
+
+    card.addEventListener("click", function() {
+
+        const countElement =
+            card.querySelector('strong[id^="count-"]');
+
+        if (!countElement) return;
+
+        const code =
+            countElement.id.replace("count-", "");
+
+        if (selectedCompanyCode === code) {
+            selectedCompanyCode = null;
+        } else {
+            selectedCompanyCode = code;
+        }
+
+        applyFilters();
+    });
+});
+
 const total = shipments.length;
 
 const delivered = shipments.filter(
@@ -2029,6 +2055,7 @@ const { error: updateError } =
         loadShipments();
     });
 
+  let selectedCompanyCode = null;
 
  function applyFilters() {
   const search = document
@@ -2052,6 +2079,12 @@ const { error: updateError } =
       (s.destination || "").toLowerCase().includes(search);
 
     if (!matchesSearch) return false;
+
+    const matchesCompany =
+    !selectedCompanyCode ||
+    (s.customer_code || "").toUpperCase() === selectedCompanyCode;
+
+    if (!matchesCompany) return false;
 
     const status = (s.status || "").trim().toLowerCase();
 
