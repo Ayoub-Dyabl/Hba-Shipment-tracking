@@ -1268,6 +1268,28 @@ background:
         grid-template-columns: 1fr;
     }
 }
+
+    .tracking-company {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 15px;
+}
+
+.tracking-company img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.tracking-company span {
+    color: #171a1f;
+    font-size: 12px;
+    font-weight: 700;
+}
     
   </style>
   
@@ -1475,6 +1497,37 @@ if (trackingFromLink) {
 
     const shipment = data[0];
 
+    const companyInfo = {
+    AX: { name: "ARAMEX", logo: "aramex.pgn.png" },
+    DF: { name: "DELTA FOOD", logo: "Delta.pgn.jpeg" },
+    OR: { name: "ORONTES", logo: "orontes.pgn.jpeg" },
+    AD: { name: "ADAM DAIRY", logo: "adamsdairy.pgn.jpeg" },
+    JY: { name: "JAYA NG PALLAI", logo: "ngpillai.pgn.jpeg" },
+    NU: { name: "NUCLEOS", logo: "nucleos.pgn.png" },
+    VT: { name: "VITAL", logo: "vital.pgn.jpeg" },
+    MF: { name: "M FRESH", logo: "Mfresh.pgn.jpg" },
+    TY: { name: "TAYSEER", logo: "TAYSEER.pgn.png" },
+    OS: { name: "OVER SEA", logo: "over sea.pgn.jpeg" },
+    EG: { name: "EMIRATES GRATN", logo: "EMIRATE GRATN.PGN.jpeg" },
+    AN: { name: "ALNASAB", logo: null }
+};
+
+const company = companyInfo[
+    (shipment.customer_code || "").toUpperCase()
+];
+
+const companyHTML = company
+    ? `
+        <div class="tracking-company">
+            ${company.logo
+                ? `<img src="${company.logo}" alt="${company.name}">`
+                : ""
+            }
+            <span>${company.name}</span>
+        </div>
+      `
+    : "";
+
     const podHTML = shipment.pod_path
     ? `<button class="pod-btn"
         onclick="viewCustomerPOD('${shipment.pod_path}')">
@@ -1614,6 +1667,8 @@ trackingResult.innerHTML = `
         <h3 style="color:#f58220; margin-bottom:15px;">
           ${shipment.tracking_number}
         </h3>
+
+        ${companyHTML}
        
 <div class="route-card">
 
