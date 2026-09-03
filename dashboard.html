@@ -678,6 +678,15 @@ td:last-child .delete-btn {
         grid-template-columns: repeat(2, 1fr);
     }
 }   
+
+      .company-count-card.selected-company {
+    transform: translateY(-3px);
+    border: 1px solid #f58220 !important;
+    border-left: 4px solid #f58220 !important;
+    box-shadow: 0 0 0 2px rgba(245,130,34,0.25),
+                0 8px 20px rgba(0,0,0,0.35);
+    background: #211c18 !important;
+}
       
   </style>
 </head>
@@ -1217,13 +1226,25 @@ companyCodes.forEach(code => {
         const code =
             countElement.id.replace("count-", "");
 
-        if (selectedCompanyCode === code) {
-            selectedCompanyCode = null;
-        } else {
-            selectedCompanyCode = code;
-        }
+       if (selectedCompanyCode === code) {
+    selectedCompanyCode = null;
 
-        applyFilters();
+    document.querySelectorAll(".company-count-card").forEach(c => {
+        c.classList.remove("selected-company");
+    });
+
+} else {
+    selectedCompanyCode = code;
+
+    document.querySelectorAll(".company-count-card").forEach(c => {
+        c.classList.remove("selected-company");
+    });
+
+    card.classList.add("selected-company");
+}
+
+applyFilters();
+      
     });
 });
 
