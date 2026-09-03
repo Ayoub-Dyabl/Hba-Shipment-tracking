@@ -55,17 +55,51 @@
     }
 
 .hero {
-  min-height: 550px;
-background:
-    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)),
-    url('HBA.pgn.jpeg') center center / cover no-repeat;
- display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 40px 20px;
+    width: 100%;
+    min-height: 550px;
+     aspect-ratio: 16 / 9;
 
+    background:
+        linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.25)),
+        url("HBA.pgn.jpeg");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    padding: 40px 20px;
+    margin: 0 !important;
+    border: 0 !important;
 }
+
+#track {
+    margin: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
+    border: 0 !important;
+}
+
+#track::before,
+#track::after {
+    display: none !important;
+}
+
+@media (max-width: 800px) {
+    .hero {
+        width: 100%;
+        min-height: 550px;
+        background-size: cover;
+        background-position: center center;
+        padding: 40px 15px;
+        margin: 0 !important;
+    }
+}
+    
     .hero-content {
       max-width: 850px;
       color: white;
