@@ -1269,16 +1269,23 @@ background:
     }
 }
 
-    .tracking-company {
+   .tracking-company {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+
     display: inline-flex;
     align-items: center;
     gap: 8px;
+
     background: #ffffff;
     border-radius: 8px;
     padding: 6px 10px;
-    margin-bottom: 15px;
-}
+    margin: 0;
 
+    z-index: 5;
+}
+    
 .tracking-company img {
     width: 32px;
     height: 32px;
@@ -1663,6 +1670,7 @@ trackingResult.innerHTML = `
     background:#15171b;
     padding:20px;
     border-radius:8px;
+    position:relative;
   ">
         <h3 style="color:#f58220; margin-bottom:15px;">
           ${shipment.tracking_number}
