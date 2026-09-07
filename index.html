@@ -1588,7 +1588,9 @@ footer {
     <div class="tracking-box">
       <h2>Track Your Shipment</h2>
 
-   <div class="tracking-search">
+  <!-- STEP 4 — MAKE SURE YOUR HTML IS EXACTLY THIS -->
+
+<div class="tracking-search">
     <input
         type="text"
         id="trackingInput"
@@ -1596,7 +1598,10 @@ footer {
         autocomplete="off"
     >
 
-    <button type="button" id="trackShipmentBtn">
+    <button
+        type="button"
+        id="trackShipmentBtn"
+    >
         TRACK SHIPMENT
     </button>
 </div>
@@ -2643,7 +2648,6 @@ document.addEventListener("DOMContentLoaded", function () {
 const trackShipmentBtn = document.getElementById("trackShipmentBtn");
 
 trackShipmentBtn.addEventListener("click", function () {
-
     const trackingNumber = trackingInput.value.trim();
 
     if (!trackingNumber) {
@@ -2656,24 +2660,12 @@ trackShipmentBtn.addEventListener("click", function () {
     trackShipment(trackingNumber);
 });
 
-
-    // CLICK BUTTON
-    trackBtn.addEventListener("click", function (event) {
-
+trackingInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
         event.preventDefault();
-
-        const trackingNumber = trackingInput.value
-            .trim()
-            .toUpperCase();
-
-        if (!trackingNumber) {
-
-            alert("Please enter your tracking number.");
-
-            trackingInput.focus();
-
-            return;
-        }
+        trackShipmentBtn.click();
+    }
+});
 
 
         console.log("Tracking shipment:", trackingNumber);
