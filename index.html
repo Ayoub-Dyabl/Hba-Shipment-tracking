@@ -1398,7 +1398,7 @@ footer {
 
  <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
 />
 
 <script
@@ -2044,7 +2044,24 @@ function createShipmentMap(shipment) {
 
     const mapElement = document.getElementById("shipmentMap");
 
-    if (!mapElement || typeof L === "undefined") {
+    if (!mapElement) {
+        console.error("shipmentMap element not found");
+        return;
+    }
+
+    if (typeof L === "undefined") {
+        console.error("Leaflet is not loaded");
+
+        mapElement.innerHTML = `
+            <div style="
+                color:#fff;
+                padding:30px;
+                text-align:center;
+            ">
+                Map library failed to load.
+            </div>
+        `;
+
         return;
     }
 
@@ -2054,190 +2071,32 @@ function createShipmentMap(shipment) {
     }
 
 
-    /* ORIGIN */
-
-    let originCoords =
-        findHBALocation(shipment.origin);
-
-    /*
-       If the exact loading location isn't recognized,
-       use Dubai as the temporary starting point.
-    */
-
-    if (!originCoords) {
-        originCoords = hbaLocations["dubai"];
-    }
-
-
-    /* CURRENT LOCATION */
-
-    let currentCoords =
-        findHBALocation(shipment.current_location);
-
-
-    /* DESTINATION */
-
-    let destinationCoords =
-        findHBALocation(shipment.destination);
-
-
-    /*
-       If current location isn't recognized,
-       show destination instead.
-    */
-
-    if (!currentCoords) {
-        currentCoords = destinationCoords;
-    }
-
-
-    /*
-       If neither current location nor destination
-       is recognized, show Middle East overview.
-    */
-
-    if (!currentCoords) {
-
-        shipmentMap = L.map("shipmentMap").setView(
-            [25.5, 45],
-            4
-        );
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-                attribution: "&copy; OpenStreetMap contributors"
-            }
-        ).addTo(shipmentMap);
-
-        return;
-    }
-
-
-    /* CREATE MAP */
-
-    shipmentMap = L.map("shipmentMap", {
-        zoomControl: true
-    });
+    // Default Middle East map
+    shipmentMap = L.map("shipmentMap").setView(
+        [26.5, 46.5],
+        4
+    );
 
 
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-            maxZoom: 19,
-            attribution: "&copy; OpenStreetMap contributors"
+            maxZoom: 18,
+            attribution: "&copy; OpenStreetMap"
         }
     ).addTo(shipmentMap);
 
 
-    /* ORIGIN MARKER */
-
-    L.circleMarker(originCoords, {
-        radius: 8,
-        color: "#f58220",
-        fillColor: "#ffffff",
-        fillOpacity: 1,
-        weight: 4
-    })
-    .addTo(shipmentMap)
-    .bindPopup(`
-        <div class="map-location-label">
-            Loading Location
-        </div>
-        ${shipment.origin || "Dubai"}
-    `);
-
-
-    /* ROUTE */
-
-    const route = L.polyline(
-        [
-            originCoords,
-            currentCoords
-        ],
-        {
-            color: "#f58220",
-            weight: 5,
-            opacity: 0.9,
-            dashArray: "10, 10"
-        }
-    ).addTo(shipmentMap);
-
-
-    /* TRUCK */
-
-    const truckIcon = L.divIcon({
-        className: "truck-map-icon",
-
-        html: `
-            <div class="truck-map-marker">
-                🚚
-            </div>
-        `,
-
-        iconSize: [42, 42],
-        iconAnchor: [21, 21]
-    });
-
-
-    L.marker(currentCoords, {
-        icon: truckIcon
-    })
-    .addTo(shipmentMap)
-    .bindPopup(`
-        <div class="map-location-label">
-            Current Location
-        </div>
-        ${shipment.current_location || shipment.destination || ""}
-    `)
-    .openPopup();
-
-
-    /* DESTINATION */
-
-    if (destinationCoords) {
-
-        L.circleMarker(destinationCoords, {
-            radius: 7,
-            color: "#ffffff",
-            fillColor: "#f58220",
-            fillOpacity: 1,
-            weight: 3
-        })
+    // TEST MARKER - DUBAI
+    L.marker([25.2048, 55.2708])
         .addTo(shipmentMap)
-        .bindPopup(`
-            <div class="map-location-label">
-                Destination
-            </div>
-            ${shipment.destination || ""}
-        `);
-    }
-
-
-    /* AUTO ZOOM */
-
-    const points = [
-        originCoords,
-        currentCoords
-    ];
-
-    if (destinationCoords) {
-        points.push(destinationCoords);
-    }
-
-    shipmentMap.fitBounds(
-        L.latLngBounds(points),
-        {
-            padding: [45, 45],
-            maxZoom: 7
-        }
-    );
+        .bindPopup("Dubai")
+        .openPopup();
 
 
     setTimeout(() => {
         shipmentMap.invalidateSize();
-    }, 200);
+    }, 500);
 }
   
 </script>
