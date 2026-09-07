@@ -1446,6 +1446,24 @@ footer {
 .map-location-label::before {
     display: none !important;
 }
+
+    #trackShipmentBtn {
+    position: relative;
+    z-index: 50;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+#trackingInput {
+    position: relative;
+    z-index: 50;
+    pointer-events: auto !important;
+}
+
+.tracking-input-wrap {
+    position: relative;
+    z-index: 50;
+}
     
   </style>
 
@@ -1570,19 +1588,24 @@ footer {
     <div class="tracking-box">
       <h2>Track Your Shipment</h2>
 
-   <div class="tracking-search">
-  <input
-    type="text"
-    id="trackingNumber"
-    placeholder="Enter HBA tracking number"
-  >
-  <button
-    id="trackButton"
-    type="button"
->
-    TRACK SHIPMENT →
-</button>
+   <div class="tracking-input-wrap">
+
+    <input
+        type="text"
+        id="trackingInput"
+        placeholder="HBA-2026-AX0001"
+        autocomplete="off"
+    >
+
+    <button
+        type="button"
+        id="trackShipmentBtn"
+    >
+        TRACK SHIPMENT →
+    </button>
+
 </div>
+      
       <div id="trackingResult"></div>
       
       </div>
@@ -2615,5 +2638,73 @@ setTimeout(() => {
 
 </section>
 
+  <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const trackBtn = document.getElementById("trackShipmentBtn");
+    const trackingInput = document.getElementById("trackingInput");
+
+    if (!trackBtn) {
+        console.error("Track Shipment button not found");
+        return;
+    }
+
+    if (!trackingInput) {
+        console.error("Tracking input not found");
+        return;
+    }
+
+
+    // CLICK BUTTON
+    trackBtn.addEventListener("click", function (event) {
+
+        event.preventDefault();
+
+        const trackingNumber = trackingInput.value
+            .trim()
+            .toUpperCase();
+
+        if (!trackingNumber) {
+
+            alert("Please enter your tracking number.");
+
+            trackingInput.focus();
+
+            return;
+        }
+
+
+        console.log("Tracking shipment:", trackingNumber);
+
+
+        // OPEN SAME PAGE WITH TRACKING NUMBER
+        const newUrl =
+            window.location.pathname +
+            "?tracking=" +
+            encodeURIComponent(trackingNumber);
+
+        window.location.href = newUrl;
+
+    });
+
+
+    // PRESS ENTER
+    trackingInput.addEventListener("keydown", function (event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            trackBtn.click();
+
+        }
+
+    });
+
+});
+
+</script>
+  
 </body>
 </html>
