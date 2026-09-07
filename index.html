@@ -1341,155 +1341,69 @@ footer {
     border-top: none !important;
 }
 
-    /* ===== FAKE SHIPMENT MAP ===== */
+    /* ===== HBA REAL MAP ===== */
 
-.fake-map {
-    position: relative;
+.shipment-map-wrap {
     width: 100%;
-    height: 320px;
     margin-top: 20px;
+    background: #15171b;
+    border: 1px solid #34383f;
     border-radius: 14px;
     overflow: hidden;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(245,130,34,.08), transparent 25%),
-        linear-gradient(135deg, #101317, #1b2026);
-    border: 1px solid #343a40;
 }
 
-.fake-map-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-}
-
-.fake-map-title {
-    position: absolute;
-    top: 16px;
-    left: 18px;
-    z-index: 4;
-    color: #fff;
+.shipment-map-header {
+    padding: 14px 18px;
+    color: #ffffff;
     font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #34383f;
+}
+
+#shipmentMap {
+    width: 100%;
+    height: 380px;
+    z-index: 1;
+}
+
+.truck-map-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+.truck-map-marker {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #15171b;
+    border: 3px solid #f58220;
+    border-radius: 50%;
+    font-size: 23px;
+    box-shadow: 0 0 12px rgba(245,130,34,.8);
+}
+
+.map-location-label {
     font-weight: 700;
 }
 
-.route-line {
-    position: absolute;
-    left: 14%;
-    top: 58%;
-    width: 68%;
-    height: 4px;
-    background: #f58220;
-    border-radius: 999px;
-    transform: rotate(-8deg);
-    transform-origin: left center;
-    box-shadow: 0 0 12px rgba(245,130,34,.7);
-}
-
-.route-line::after {
-    content: "";
-    position: absolute;
-    inset: -5px 0;
-    border-top: 2px dashed rgba(255,255,255,.25);
-}
-
-.map-point {
-    position: absolute;
-    z-index: 5;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    border: 5px solid #f58220;
-    box-shadow: 0 0 0 5px rgba(245,130,34,.15);
-}
-
-.map-point.start {
-    left: 12%;
-    top: 61%;
-}
-
-.map-point.end {
-    right: 12%;
-    top: 40%;
-}
-
-.map-label {
-    position: absolute;
-    z-index: 5;
-    background: rgba(0,0,0,.72);
-    color: #fff;
-    padding: 8px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    border: 1px solid rgba(255,255,255,.08);
-}
-
-.map-label.start {
-    left: 7%;
-    top: 69%;
-}
-
-.map-label.end {
-    right: 7%;
-    top: 18%;
-}
-
-.truck-marker {
-    position: absolute;
-    z-index: 6;
-    left: 14%;
-    top: 55%;
-    font-size: 30px;
-    transform: translate(-50%, -50%);
-    animation: truckMove 5s ease-in-out infinite alternate;
-    filter: drop-shadow(0 0 6px rgba(245,130,34,.8));
-}
-
-@keyframes truckMove {
-    0% {
-        left: 15%;
-        top: 57%;
-    }
-
-    100% {
-        left: 74%;
-        top: 42%;
-    }
-}
-
-.map-status {
-    position: absolute;
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    z-index: 5;
-    background: #f58220;
-    color: #111;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 800;
-}
-
 @media (max-width: 700px) {
-    .fake-map {
-        height: 260px;
-    }
-
-    .truck-marker {
-        font-size: 24px;
-    }
-
-    .map-label {
-        font-size: 10px;
-        padding: 6px 8px;
+    #shipmentMap {
+        height: 300px;
     }
 }
     
   </style>
+
+ <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
   
 </head>
 
@@ -1701,39 +1615,15 @@ if (trackingFromLink) {
 
     const shipment = data[0];
 
-    const fakeMapHTML = `
-    <div class="fake-map">
-        <div class="fake-map-grid"></div>
-
-        <div class="fake-map-title">
-            Live Route Preview
+    const mapHTML = `
+    <div class="shipment-map-wrap">
+        <div class="shipment-map-header">
+            🗺️ Shipment Route
         </div>
 
-        <div class="route-line"></div>
-
-        <div class="map-point start"></div>
-        <div class="map-point end"></div>
-
-        <div class="map-label start">
-            <strong>${shipment.origin || "Loading Location"}</strong><br>
-            Origin
-        </div>
-
-        <div class="map-label end">
-            <strong>${shipment.current_location || shipment.destination || "Current Location"}</strong><br>
-            Current Location
-        </div>
-
-        <div class="truck-marker">🚚</div>
-
-        <div class="map-status">
-            ${shipment.current_location
-                ? `Truck near ${shipment.current_location}`
-                : "Shipment in transit"}
-        </div>
+        <div id="shipmentMap"></div>
     </div>
 `;
-    
 
     const companyInfo = {
     AX: { name: "ARAMEX", logo: "aramex.pgn.png" },
@@ -1933,7 +1823,7 @@ trackingResult.innerHTML = `
 
 </div>
  ${timelineHTML}
- ${fakeMapHTML}
+ ${mapHTML}
  ${delayedHTML}
  ${historyHTML}
  
@@ -2079,6 +1969,270 @@ menu.classList.toggle("show");
 function whatsappDriver(contact) {
     const number = contact.split(/\s*-\s*/)[0].replace(/\D/g, "");
     window.open("https://wa.me/" + number, "_blank");
+}
+
+  let shipmentMap = null;
+
+const hbaLocations = {
+    "dubai": [25.2048, 55.2708],
+    "jebel ali": [24.9857, 55.0273],
+    "abu dhabi": [24.4539, 54.3773],
+    "al sila": [24.0800, 51.7600],
+    "sila": [24.0800, 51.7600],
+
+    "al batha": [24.1240, 51.5840],
+    "batha": [24.1240, 51.5840],
+    "riyadh": [24.7136, 46.6753],
+    "dammam": [26.4207, 50.0888],
+    "jeddah": [21.4858, 39.1925],
+    "qassim": [26.2078, 43.4837],
+    "al qassim": [26.2078, 43.4837],
+    "salwa": [24.7400, 50.7600],
+    "hafr al batin": [28.4328, 45.9708],
+    "al haditha": [31.4500, 37.1500],
+
+    "al omari": [31.5300, 37.0900],
+    "amman": [31.9539, 35.9106],
+    "aqaba": [29.5321, 35.0063],
+
+    "nuweiba": [29.0468, 34.6634],
+    "alexandria": [31.2001, 29.9187],
+    "cairo": [30.0444, 31.2357],
+
+    "hatta": [24.8000, 56.1167],
+    "wajajah": [24.7670, 56.2300],
+    "muscat": [23.5880, 58.3829],
+    "sohar": [24.3470, 56.7094],
+
+    "kuwait": [29.3759, 47.9774],
+    "doha": [25.2854, 51.5310],
+    "manama": [26.2235, 50.5876],
+
+    "beirut": [33.8938, 35.5018],
+    "damascus": [33.5138, 36.2765]
+};
+
+
+function findHBALocation(locationName) {
+
+    if (!locationName) return null;
+
+    const name = locationName
+        .toLowerCase()
+        .trim();
+
+    if (hbaLocations[name]) {
+        return hbaLocations[name];
+    }
+
+    for (const key in hbaLocations) {
+        if (name.includes(key)) {
+            return hbaLocations[key];
+        }
+    }
+
+    return null;
+}
+
+
+function createShipmentMap(shipment) {
+
+    const mapElement = document.getElementById("shipmentMap");
+
+    if (!mapElement || typeof L === "undefined") {
+        return;
+    }
+
+    if (shipmentMap) {
+        shipmentMap.remove();
+        shipmentMap = null;
+    }
+
+
+    /* ORIGIN */
+
+    let originCoords =
+        findHBALocation(shipment.origin);
+
+    /*
+       If the exact loading location isn't recognized,
+       use Dubai as the temporary starting point.
+    */
+
+    if (!originCoords) {
+        originCoords = hbaLocations["dubai"];
+    }
+
+
+    /* CURRENT LOCATION */
+
+    let currentCoords =
+        findHBALocation(shipment.current_location);
+
+
+    /* DESTINATION */
+
+    let destinationCoords =
+        findHBALocation(shipment.destination);
+
+
+    /*
+       If current location isn't recognized,
+       show destination instead.
+    */
+
+    if (!currentCoords) {
+        currentCoords = destinationCoords;
+    }
+
+
+    /*
+       If neither current location nor destination
+       is recognized, show Middle East overview.
+    */
+
+    if (!currentCoords) {
+
+        shipmentMap = L.map("shipmentMap").setView(
+            [25.5, 45],
+            4
+        );
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+                attribution: "&copy; OpenStreetMap contributors"
+            }
+        ).addTo(shipmentMap);
+
+        return;
+    }
+
+
+    /* CREATE MAP */
+
+    shipmentMap = L.map("shipmentMap", {
+        zoomControl: true
+    });
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(shipmentMap);
+
+
+    /* ORIGIN MARKER */
+
+    L.circleMarker(originCoords, {
+        radius: 8,
+        color: "#f58220",
+        fillColor: "#ffffff",
+        fillOpacity: 1,
+        weight: 4
+    })
+    .addTo(shipmentMap)
+    .bindPopup(`
+        <div class="map-location-label">
+            Loading Location
+        </div>
+        ${shipment.origin || "Dubai"}
+    `);
+
+
+    /* ROUTE */
+
+    const route = L.polyline(
+        [
+            originCoords,
+            currentCoords
+        ],
+        {
+            color: "#f58220",
+            weight: 5,
+            opacity: 0.9,
+            dashArray: "10, 10"
+        }
+    ).addTo(shipmentMap);
+
+
+    /* TRUCK */
+
+    const truckIcon = L.divIcon({
+        className: "truck-map-icon",
+
+        html: `
+            <div class="truck-map-marker">
+                🚚
+            </div>
+        `,
+
+        iconSize: [42, 42],
+        iconAnchor: [21, 21]
+    });
+
+
+    L.marker(currentCoords, {
+        icon: truckIcon
+    })
+    .addTo(shipmentMap)
+    .bindPopup(`
+        <div class="map-location-label">
+            Current Location
+        </div>
+        ${shipment.current_location || shipment.destination || ""}
+    `)
+    .openPopup();
+
+
+    /* DESTINATION */
+
+    if (destinationCoords) {
+
+        L.circleMarker(destinationCoords, {
+            radius: 7,
+            color: "#ffffff",
+            fillColor: "#f58220",
+            fillOpacity: 1,
+            weight: 3
+        })
+        .addTo(shipmentMap)
+        .bindPopup(`
+            <div class="map-location-label">
+                Destination
+            </div>
+            ${shipment.destination || ""}
+        `);
+    }
+
+
+    /* AUTO ZOOM */
+
+    const points = [
+        originCoords,
+        currentCoords
+    ];
+
+    if (destinationCoords) {
+        points.push(destinationCoords);
+    }
+
+    shipmentMap.fitBounds(
+        L.latLngBounds(points),
+        {
+            padding: [45, 45],
+            maxZoom: 7
+        }
+    );
+
+
+    setTimeout(() => {
+        shipmentMap.invalidateSize();
+    }, 200);
 }
   
 </script>
