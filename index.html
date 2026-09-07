@@ -1938,11 +1938,49 @@ trackingResult.innerHTML = `
         }
     ).addTo(window.hbaMap);
 
-    // Dubai test marker
-    L.marker([25.2048, 55.2708])
-        .addTo(window.hbaMap)
-        .bindPopup("Dubai")
-        .openPopup();
+      const originCoords = findHBALocation(shipment.origin);
+      const currentCoords = findHBALocation(shipment.current_location);
+      const destinationCoords = findHBALocation(shipment.destination);
+
+console.log("ORIGIN:", shipment.origin, originCoords);
+console.log("CURRENT:", shipment.current_location, currentCoords);
+console.log("DESTINATION:", shipment.destination, destinationCoords);
+
+const points = [];
+
+      const hbaLocations = {
+    "dubai": [25.2048, 55.2708],
+    "al sila": [24.0900, 51.7500],
+    "sila": [24.0900, 51.7500],
+    "riyadh": [24.7136, 46.6753],
+    "al batha": [24.1240, 51.5840],
+    "batha": [24.1240, 51.5840],
+    "abu dhabi": [24.4539, 54.3773],
+    "jebel ali": [24.9857, 55.0273]
+};
+
+function findHBALocation(name) {
+
+    if (!name) return null;
+
+    const cleanName = name
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, " ");
+
+    if (hbaLocations[cleanName]) {
+        return hbaLocations[cleanName];
+    }
+
+    for (const key in hbaLocations) {
+        if (cleanName.includes(key)) {
+            return hbaLocations[key];
+        }
+    }
+
+    return null;
+}
+
 
     setTimeout(() => {
         window.hbaMap.invalidateSize();
