@@ -1892,9 +1892,8 @@ trackingResult.innerHTML = `
       </div>
       
     `;
-  }
 
-setTimeout(() => {
+    setTimeout(() => {
 
     const mapBox = document.getElementById("shipmentMap");
 
@@ -1950,6 +1949,8 @@ setTimeout(() => {
     }, 300);
 
 }, 500);
+
+  }
   
   async function viewCustomerPOD(podPath) {
     const { data, error } = await db.storage
