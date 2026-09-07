@@ -1562,6 +1562,7 @@ footer {
 
 </footer>
   
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
 <script>
@@ -1877,6 +1878,10 @@ trackingResult.innerHTML = `
       
     `;
   }
+
+  setTimeout(() => {
+    createShipmentMap(shipment);
+}, 300);
 
   async function viewCustomerPOD(podPath) {
     const { data, error } = await db.storage
