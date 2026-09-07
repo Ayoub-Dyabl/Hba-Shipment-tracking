@@ -57,8 +57,7 @@
 .hero {
     width: 100%;
     min-height: 550px;
-     aspect-ratio: 16 / 9;
-
+    
     background:
         linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.25)),
         url("HBA.pgn.jpeg");
@@ -77,12 +76,24 @@
     border: 0 !important;
 }
 
-    .hero-content {
+   .hero-content {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
+    position: relative;
+}
+    
+    #services {
+    position: relative;
+    z-index: 1;
+    clear: both;
 }
 
+  #trackingResult {
+    position: relative;
+    z-index: 10;
+}  
+    
 #track {
     margin: 0 !important;
     padding-left: 0;
