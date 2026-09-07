@@ -2167,11 +2167,17 @@ function getCoords(location) {
 
 const shipmentTruckIcon = L.divIcon({
     className: "truck-map-icon",
-    html: "🚛",
-    iconSize: [40, 40],
-    iconAnchor: [20, 20]
-});
 
+    html: `
+        <div class="truck-marker-btn">
+            🚛
+        </div>
+    `,
+
+    iconSize: [46, 46],
+    iconAnchor: [23, 23],
+    popupAnchor: [0, -28]
+});
 
 /* =========================
    CLEAR OLD ROUTE
@@ -2297,24 +2303,61 @@ function renderShipmentRoute(origin, currentLocation, destination) {
     ========================= */
 
     const truckMarker = L.marker(
-        currentCoords,
-        {
-            icon: shipmentTruckIcon,
-            zIndexOffset: 1000
-        }
-    )
-    .addTo(shipmentMap)
-    .bindTooltip(
-        "Current: " + currentLocation,
-        {
-            permanent: true,
-            direction: "top",
-            offset: [0, -20],
-            className: "map-location-label"
-        }
-    );
+    currentCoords,
+    {
+        icon: shipmentTruckIcon,
+        zIndexOffset: 5000,
+        interactive: true
+    }
+)
+.addTo(shipmentMap);
 
-    shipmentRouteLayers.push(truckMarker);
+
+/* CLICK TRUCK */
+truckMarker.on("click", function () {
+
+    truckMarker
+        .bindPopup(`
+            <div style="
+                min-width:170px;
+                font-family:Arial,sans-serif;
+            ">
+
+                <div style="
+                    font-size:14px;
+                    font-weight:700;
+                    margin-bottom:7px;
+                    color:#ff6a00;
+                ">
+                    🚛 Current Location
+                </div>
+
+                <div style="
+                    color:#222;
+                    font-size:13px;
+                ">
+                    ${currentLocation}
+                </div>
+
+            </div>
+        `)
+        .openPopup();
+
+});
+
+
+/* HOVER LABEL */
+truckMarker.bindTooltip(
+    currentLocation,
+    {
+        direction: "top",
+        offset: [0, -25],
+        className: "map-location-label"
+    }
+);
+
+
+shipmentRouteLayers.push(truckMarker);
 
 
     /* =========================
