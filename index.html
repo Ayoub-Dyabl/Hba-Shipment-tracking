@@ -1899,55 +1899,58 @@ setTimeout(() => {
     const mapBox = document.getElementById("shipmentMap");
 
     if (!mapBox) {
-        console.error("shipmentMap not found");
+        console.error("MAP ERROR: shipmentMap not found");
         return;
     }
 
-    if (typeof L === "undefined") {
+    if (!window.L) {
         mapBox.innerHTML = `
             <div style="
+                padding:40px;
                 color:#ff5555;
-                padding:30px;
                 text-align:center;
-                font-weight:bold;
+                font-weight:700;
             ">
-                Leaflet library is not loaded
+                MAP ERROR: Leaflet did not load
             </div>
         `;
-
-        console.error("Leaflet library not loaded");
         return;
     }
 
-    if (shipmentMap) {
-        shipmentMap.remove();
-        shipmentMap = null;
+    // Remove previous map if shipment is searched again
+    if (window.hbaMap) {
+        window.hbaMap.remove();
+        window.hbaMap = null;
     }
 
-    shipmentMap = L.map(mapBox).setView(
-        [25.5, 45.5],
-        4
-    );
+    // Create Middle East map
+    window.hbaMap = L.map("shipmentMap", {
+        center: [25.5, 45.5],
+        zoom: 4,
+        zoomControl: true
+    });
 
+    // Real OpenStreetMap layer
     L.tileLayer(
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
             maxZoom: 19,
             attribution: "&copy; OpenStreetMap contributors"
         }
-    ).addTo(shipmentMap);
+    ).addTo(window.hbaMap);
 
+    // Dubai test marker
     L.marker([25.2048, 55.2708])
-        .addTo(shipmentMap)
+        .addTo(window.hbaMap)
         .bindPopup("Dubai")
         .openPopup();
 
     setTimeout(() => {
-        shipmentMap.invalidateSize();
+        window.hbaMap.invalidateSize();
     }, 300);
 
 }, 500);
-
+  
   async function viewCustomerPOD(podPath) {
     const { data, error } = await db.storage
         .from("pod-files")
