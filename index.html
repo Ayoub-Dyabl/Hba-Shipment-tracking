@@ -2051,8 +2051,8 @@ const hbaLocations = {
     "dubai": [25.2048, 55.2708],
     "jebel ali": [24.9857, 55.0273],
     "abu dhabi": [24.4539, 54.3773],
-    "al sila": [24.0800, 51.7600],
-    "sila": [24.0800, 51.7600],
+    "al sila": [24.0900, 51.7500],
+    "sila": [24.0900, 51.7500],
 
     "al batha": [24.1240, 51.5840],
     "batha": [24.1240, 51.5840],
@@ -2086,28 +2086,23 @@ const hbaLocations = {
     "damascus": [33.5138, 36.2765]
 };
 
+function findHBALocation(name) {
+    if (!name) return null;
 
-function findHBALocation(locationName) {
+    const cleanName = name.toLowerCase().trim();
 
-    if (!locationName) return null;
-
-    const name = locationName
-        .toLowerCase()
-        .trim();
-
-    if (hbaLocations[name]) {
-        return hbaLocations[name];
+    if (hbaLocations[cleanName]) {
+        return hbaLocations[cleanName];
     }
 
     for (const key in hbaLocations) {
-        if (name.includes(key)) {
+        if (cleanName.includes(key)) {
             return hbaLocations[key];
         }
     }
 
     return null;
 }
-
 
 function createShipmentMap(shipment) {
 
@@ -2157,11 +2152,114 @@ function createShipmentMap(shipment) {
 
 
     // TEST MARKER - DUBAI
-    L.marker([25.2048, 55.2708])
-        .addTo(shipmentMap)
-        .bindPopup("Dubai")
-        .openPopup();
+   const originCoords = findHBALocation(shipment.origin);
+const currentCoords = findHBALocation(shipment.current_location);
+const destinationCoords = findHBALocation(shipment.destination);
 
+const points = [];
+
+if (originCoords) {
+    points.push(originCoords);
+
+    L.circleMarker(originCoords, {
+        radius: 8,
+        color: "#f58220",
+        fillColor: "#ffffff",
+        fillOpacity: 1,
+        weight: 4
+    })
+    .addTo(window.hbaMap)
+    .bindPopup(`
+        <strong>Origin</strong><br>
+        ${shipment.origin}
+    `);
+}
+
+if (destinationCoords) {
+    points.push(destinationCoords);
+
+    L.circleMarker(destinationCoords, {
+        radius: 8,
+        color: "#ffffff",
+        fillColor: "#f58220",
+        fillOpacity: 1,
+        weight: 4
+    })
+    .addTo(window.hbaMap)
+    .bindPopup(`
+        <strong>Destination</strong><br>
+        ${shipment.destination}
+    `);
+}
+
+  if (originCoords && currentCoords) {
+    L.polyline(
+        [originCoords, currentCoords],
+        {
+            color: "#f58220",
+            weight: 5,
+            opacity: 0.95
+        }
+    ).addTo(window.hbaMap);
+}
+
+if (currentCoords && destinationCoords) {
+    L.polyline(
+        [currentCoords, destinationCoords],
+        {
+            color: "#999999",
+            weight: 4,
+            opacity: 0.7,
+            dashArray: "10, 10"
+        }
+    ).addTo(window.hbaMap);
+}
+
+
+if (currentCoords) {
+    points.push(currentCoords);
+
+    const truckIcon = L.divIcon({
+        className: "",
+        html: `
+            <div style="
+                width:44px;
+                height:44px;
+                background:#15171b;
+                border:3px solid #f58220;
+                border-radius:50%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:24px;
+                box-shadow:0 0 12px rgba(245,130,34,.7);
+            ">
+                🚛
+            </div>
+        `,
+        iconSize: [44, 44],
+        iconAnchor: [22, 22]
+    });
+
+    L.marker(currentCoords, {
+        icon: truckIcon
+    })
+    .addTo(window.hbaMap)
+    .bindPopup(`
+        <strong>Current Location</strong><br>
+        ${shipment.current_location}
+    `)
+    .openPopup();
+}
+
+  if (points.length >= 2) {
+    window.hbaMap.fitBounds(
+        L.latLngBounds(points),
+        {
+            padding: [50, 50]
+        }
+    );
+}
 
     setTimeout(() => {
         shipmentMap.invalidateSize();
