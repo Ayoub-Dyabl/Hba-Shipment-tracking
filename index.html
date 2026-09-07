@@ -2118,228 +2118,291 @@ function whatsappDriver(contact) {
     const number = contact.split(/\s*-\s*/)[0].replace(/\D/g, "");
     window.open("https://wa.me/" + number, "_blank");
 }
+<!-- STEP 2:
+     YOUR CSS + LEAFLET LINKS ARE CORRECT ✅
 
-  let shipmentMap = null;
+     NOW GO TO THE VERY BOTTOM OF index.html
+     JUST BEFORE </body>
 
-const hbaLocations = {
+     DELETE THE OLD TEST MAP JAVASCRIPT ONLY
+     AND PASTE THIS:
+-->
+
+<script>
+let shipmentMap = null;
+let shipmentRouteLayers = [];
+
+/* =========================
+   LOCATION COORDINATES
+========================= */
+
+const locationCoordinates = {
     "dubai": [25.2048, 55.2708],
-    "jebel ali": [24.9857, 55.0273],
-    "abu dhabi": [24.4539, 54.3773],
-    "al sila": [24.0900, 51.7500],
-    "sila": [24.0900, 51.7500],
-
-    "al batha": [24.1240, 51.5840],
-    "batha": [24.1240, 51.5840],
-    "riyadh": [24.7136, 46.6753],
-    "dammam": [26.4207, 50.0888],
-    "jeddah": [21.4858, 39.1925],
-    "qassim": [26.2078, 43.4837],
-    "al qassim": [26.2078, 43.4837],
-    "salwa": [24.7400, 50.7600],
-    "hafr al batin": [28.4328, 45.9708],
-    "al haditha": [31.4500, 37.1500],
-
-    "al omari": [31.5300, 37.0900],
-    "amman": [31.9539, 35.9106],
-    "aqaba": [29.5321, 35.0063],
-
-    "nuweiba": [29.0468, 34.6634],
-    "alexandria": [31.2001, 29.9187],
-    "cairo": [30.0444, 31.2357],
-
-    "hatta": [24.8000, 56.1167],
-    "wajajah": [24.7670, 56.2300],
-    "muscat": [23.5880, 58.3829],
-    "sohar": [24.3470, 56.7094],
-
-    "kuwait": [29.3759, 47.9774],
-    "doha": [25.2854, 51.5310],
-    "manama": [26.2235, 50.5876],
-
-    "beirut": [33.8938, 35.5018],
-    "damascus": [33.5138, 36.2765]
+    "al sila": [24.0800, 51.7600],
+    "sila": [24.0800, 51.7600],
+    "riyadh": [24.7136, 46.6753]
 };
 
-function findHBALocation(name) {
-    if (!name) return null;
 
-    const cleanName = name.toLowerCase().trim();
+/* =========================
+   GET LOCATION
+========================= */
 
-    if (hbaLocations[cleanName]) {
-        return hbaLocations[cleanName];
-    }
+function getCoords(location) {
 
-    for (const key in hbaLocations) {
-        if (cleanName.includes(key)) {
-            return hbaLocations[key];
-        }
-    }
+    if (!location) return null;
 
-    return null;
+    const name = location
+        .toString()
+        .trim()
+        .toLowerCase();
+
+    return locationCoordinates[name] || null;
 }
 
-function createShipmentMap(shipment) {
+
+/* =========================
+   TRUCK ICON
+========================= */
+
+const shipmentTruckIcon = L.divIcon({
+    className: "truck-map-icon",
+    html: "🚛",
+    iconSize: [40, 40],
+    iconAnchor: [20, 20]
+});
+
+
+/* =========================
+   CLEAR OLD ROUTE
+========================= */
+
+function clearShipmentRoute() {
+
+    if (!shipmentMap) return;
+
+    shipmentRouteLayers.forEach(layer => {
+        shipmentMap.removeLayer(layer);
+    });
+
+    shipmentRouteLayers = [];
+}
+
+
+/* =========================
+   DRAW SHIPMENT ROUTE
+========================= */
+
+function renderShipmentRoute(origin, currentLocation, destination) {
 
     const mapElement = document.getElementById("shipmentMap");
 
     if (!mapElement) {
-        console.error("shipmentMap element not found");
+        console.error("shipmentMap not found");
         return;
     }
 
-    if (typeof L === "undefined") {
-        console.error("Leaflet is not loaded");
 
-        mapElement.innerHTML = `
-            <div style="
-                color:#fff;
-                padding:30px;
-                text-align:center;
-            ">
-                Map library failed to load.
-            </div>
-        `;
+    const originCoords = getCoords(origin);
+    const currentCoords = getCoords(currentLocation);
+    const destinationCoords = getCoords(destination);
 
+
+    console.log("SHIPMENT MAP:", {
+        origin,
+        originCoords,
+        currentLocation,
+        currentCoords,
+        destination,
+        destinationCoords
+    });
+
+
+    if (!originCoords || !currentCoords || !destinationCoords) {
+        console.error("One or more locations have no coordinates.");
         return;
     }
 
-    if (shipmentMap) {
-        shipmentMap.remove();
-        shipmentMap = null;
+
+    /* =========================
+       CREATE MAP
+    ========================= */
+
+    if (!shipmentMap) {
+
+        shipmentMap = L.map("shipmentMap");
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+                attribution: "&copy; OpenStreetMap"
+            }
+        ).addTo(shipmentMap);
+
+    } else {
+
+        clearShipmentRoute();
+
     }
 
 
-    // Default Middle East map
-    shipmentMap = L.map("shipmentMap").setView(
-        [26.5, 46.5],
-        4
+    /* =========================
+       ORIGIN
+    ========================= */
+
+    const originMarker = L.circleMarker(originCoords, {
+        radius: 8,
+        color: "#ff6a00",
+        weight: 3,
+        fillColor: "#ff6a00",
+        fillOpacity: 1
+    })
+    .addTo(shipmentMap)
+    .bindTooltip(
+        "Origin: " + origin,
+        {
+            permanent: true,
+            direction: "top",
+            className: "map-location-label"
+        }
     );
 
+    shipmentRouteLayers.push(originMarker);
 
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+    /* =========================
+       TRAVELED ROUTE
+       ORIGIN → CURRENT
+    ========================= */
+
+    const traveledLine = L.polyline(
+        [
+            originCoords,
+            currentCoords
+        ],
         {
-            maxZoom: 18,
-            attribution: "&copy; OpenStreetMap"
+            color: "#ff6a00",
+            weight: 6,
+            opacity: 1,
+            lineCap: "round"
         }
     ).addTo(shipmentMap);
 
+    shipmentRouteLayers.push(traveledLine);
 
-    // TEST MARKER - DUBAI
-   const originCoords = findHBALocation(shipment.origin);
-const currentCoords = findHBALocation(shipment.current_location);
-const destinationCoords = findHBALocation(shipment.destination);
 
-const points = [];
+    /* =========================
+       CURRENT LOCATION
+    ========================= */
 
-if (originCoords) {
-    points.push(originCoords);
-
-    L.circleMarker(originCoords, {
-        radius: 8,
-        color: "#f58220",
-        fillColor: "#ffffff",
-        fillOpacity: 1,
-        weight: 4
-    })
-    .addTo(window.hbaMap)
-    .bindPopup(`
-        <strong>Origin</strong><br>
-        ${shipment.origin}
-    `);
-}
-
-if (destinationCoords) {
-    points.push(destinationCoords);
-
-    L.circleMarker(destinationCoords, {
-        radius: 8,
-        color: "#ffffff",
-        fillColor: "#f58220",
-        fillOpacity: 1,
-        weight: 4
-    })
-    .addTo(window.hbaMap)
-    .bindPopup(`
-        <strong>Destination</strong><br>
-        ${shipment.destination}
-    `);
-}
-
-  if (originCoords && currentCoords) {
-    L.polyline(
-        [originCoords, currentCoords],
+    const truckMarker = L.marker(
+        currentCoords,
         {
-            color: "#f58220",
-            weight: 5,
-            opacity: 0.95
+            icon: shipmentTruckIcon,
+            zIndexOffset: 1000
         }
-    ).addTo(window.hbaMap);
-}
-
-if (currentCoords && destinationCoords) {
-    L.polyline(
-        [currentCoords, destinationCoords],
+    )
+    .addTo(shipmentMap)
+    .bindTooltip(
+        "Current: " + currentLocation,
         {
-            color: "#999999",
-            weight: 4,
-            opacity: 0.7,
-            dashArray: "10, 10"
-        }
-    ).addTo(window.hbaMap);
-}
-
-
-if (currentCoords) {
-    points.push(currentCoords);
-
-    const truckIcon = L.divIcon({
-        className: "",
-        html: `
-            <div style="
-                width:44px;
-                height:44px;
-                background:#15171b;
-                border:3px solid #f58220;
-                border-radius:50%;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:24px;
-                box-shadow:0 0 12px rgba(245,130,34,.7);
-            ">
-                🚛
-            </div>
-        `,
-        iconSize: [44, 44],
-        iconAnchor: [22, 22]
-    });
-
-    L.marker(currentCoords, {
-        icon: truckIcon
-    })
-    .addTo(window.hbaMap)
-    .bindPopup(`
-        <strong>Current Location</strong><br>
-        ${shipment.current_location}
-    `)
-    .openPopup();
-}
-
-  if (points.length >= 2) {
-    window.hbaMap.fitBounds(
-        L.latLngBounds(points),
-        {
-            padding: [50, 50]
+            permanent: true,
+            direction: "top",
+            offset: [0, -20],
+            className: "map-location-label"
         }
     );
-}
+
+    shipmentRouteLayers.push(truckMarker);
+
+
+    /* =========================
+       REMAINING ROUTE
+       CURRENT → DESTINATION
+    ========================= */
+
+    const remainingLine = L.polyline(
+        [
+            currentCoords,
+            destinationCoords
+        ],
+        {
+            color: "#888888",
+            weight: 5,
+            opacity: 0.9,
+            dashArray: "12, 12"
+        }
+    ).addTo(shipmentMap);
+
+    shipmentRouteLayers.push(remainingLine);
+
+
+    /* =========================
+       DESTINATION
+    ========================= */
+
+    const destinationMarker = L.circleMarker(destinationCoords, {
+        radius: 8,
+        color: "#ffffff",
+        weight: 3,
+        fillColor: "#555555",
+        fillOpacity: 1
+    })
+    .addTo(shipmentMap)
+    .bindTooltip(
+        "Destination: " + destination,
+        {
+            permanent: true,
+            direction: "top",
+            className: "map-location-label"
+        }
+    );
+
+    shipmentRouteLayers.push(destinationMarker);
+
+
+    /* =========================
+       FIT ROUTE ON SCREEN
+    ========================= */
+
+    const bounds = L.latLngBounds([
+        originCoords,
+        currentCoords,
+        destinationCoords
+    ]);
+
+    shipmentMap.fitBounds(bounds, {
+        padding: [60, 60]
+    });
+
 
     setTimeout(() => {
         shipmentMap.invalidateSize();
-    }, 500);
+
+        shipmentMap.fitBounds(bounds, {
+            padding: [60, 60]
+        });
+
+    }, 300);
 }
-  
+
+
+/* =========================
+   TEST
+   DUBAI → AL SILA → RIYADH
+========================= */
+
+setTimeout(() => {
+
+    renderShipmentRoute(
+        "Dubai",
+        "Al Sila",
+        "Riyadh"
+    );
+
+}, 500);
+
 </script>
 
 <!-- SERVICES & CONTACT -->
