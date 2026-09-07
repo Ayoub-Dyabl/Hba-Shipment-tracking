@@ -1588,22 +1588,17 @@ footer {
     <div class="tracking-box">
       <h2>Track Your Shipment</h2>
 
-   <div class="tracking-input-wrap">
-
+   <div class="tracking-search">
     <input
         type="text"
         id="trackingInput"
-        placeholder="HBA-2026-AX0001"
+        placeholder="Enter tracking number"
         autocomplete="off"
     >
 
-    <button
-        type="button"
-        id="trackShipmentBtn"
-    >
-        TRACK SHIPMENT →
+    <button type="button" id="trackShipmentBtn">
+        TRACK SHIPMENT
     </button>
-
 </div>
       
       <div id="trackingResult"></div>
@@ -2076,12 +2071,14 @@ if (trackingFromLink) {
         trackShipment();
     });
 
-    trackingInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            trackShipment();
-        }
-    });
+  trackingInput.addEventListener("keydown", function (event) {
+
+    if (event.key === "Enter") {
+        event.preventDefault();
+        trackShipmentBtn.click();
+    }
+
+});
 
 });
 
@@ -2642,18 +2639,22 @@ setTimeout(() => {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const trackBtn = document.getElementById("trackShipmentBtn");
     const trackingInput = document.getElementById("trackingInput");
+const trackShipmentBtn = document.getElementById("trackShipmentBtn");
 
-    if (!trackBtn) {
-        console.error("Track Shipment button not found");
+trackShipmentBtn.addEventListener("click", function () {
+
+    const trackingNumber = trackingInput.value.trim();
+
+    if (!trackingNumber) {
+        alert("Please enter a tracking number.");
         return;
     }
 
-    if (!trackingInput) {
-        console.error("Tracking input not found");
-        return;
-    }
+    console.log("Tracking:", trackingNumber);
+
+    trackShipment(trackingNumber);
+});
 
 
     // CLICK BUTTON
