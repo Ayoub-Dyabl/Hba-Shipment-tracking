@@ -1889,7 +1889,26 @@ trackingResult.innerHTML = `
 
      // DYNAMIC SHIPMENT ROUTE
 const origin = [25.2048, 55.2708];
-const current = [24.1000, 51.7500];
+const currentLocationMap = {
+    "al sila": [24.1000, 51.7500],
+    "sila": [24.1000, 51.7500],
+
+    "al batha": [24.1400, 50.9300],
+    "batha": [24.1400, 50.9300],
+
+    "riyadh": [24.7136, 46.6753],
+    "dammam": [26.4207, 50.0888],
+    "jeddah": [21.4858, 39.1925]
+};
+
+const currentLocationName =
+    (shipment.current_location || "")
+        .trim()
+        .toLowerCase();
+
+const current =
+    currentLocationMap[currentLocationName] ||
+    [24.1000, 51.7500];;
 const destination = [24.7136, 46.6753];
 
       async function getRoadRoute(start, end) {
