@@ -1887,11 +1887,94 @@ trackingResult.innerHTML = `
         }
     ).addTo(window.hbaShipmentMap);
 
-      // TEST ROUTE: Dubai → Al Sila → Riyadh
+     // DYNAMIC SHIPMENT ROUTE
 
-const origin = [25.2048, 55.2708];
-const current = [24.1000, 51.7500];
-const destination = [24.7136, 46.6753];
+
+      // ==============================
+// HBA LOCATION DATABASE
+// ==============================
+
+const locationCoordinates = {
+    "dubai": [25.2048, 55.2708],
+    "jebel ali": [24.9857, 55.0273],
+    "dubai investment park": [24.9790, 55.1770],
+    "dip": [24.9790, 55.1770],
+    "dwc": [24.8964, 55.1614],
+    "abu dhabi": [24.4539, 54.3773],
+    "kizad": [24.7900, 54.6900],
+
+    "al sila": [24.1000, 51.7500],
+    "sila": [24.1000, 51.7500],
+    "al batha": [24.1400, 50.9300],
+    "batha": [24.1400, 50.9300],
+    "hatta border": [24.8006, 56.1126],
+    "wajajah border": [24.9886, 56.3657],
+
+    "riyadh": [24.7136, 46.6753],
+    "dammam": [26.4207, 50.0888],
+    "jeddah": [21.4858, 39.1925]
+    "bahrain": [26.0667, 50.5577],
+    "kuwait": [29.3759, 47.9774],
+    "qatar": [25.2854, 51.5310],
+    "oman": [23.5880, 58.3829],
+    "sharjah": [25.3463, 55.4209],
+    "ras al khaimah": [25.8007, 55.9762],
+    "fujairah": [25.1288, 56.3265],
+
+    "muscat": [23.5880, 58.3829],
+    "sohar": [24.3470, 56.7094],
+    "salalah": [17.0190, 54.0897],
+   
+    "doha": [25.2854, 51.5310],
+    "abu samra": [24.7480, 51.0730],
+
+    "manama": [26.2235, 50.5876],
+
+    "kuwait city": [29.3759, 47.9774],
+    "nuwaiseeb": [28.5410, 48.4000],
+
+    "madinah": [24.5247, 39.5692],
+    "makkah": [21.3891, 39.8579],
+    "qassim": [26.2078, 43.4837],
+    "tabuk": [28.3838, 36.5550],
+    "hail": [27.5114, 41.7208],
+    "hafr al batin": [28.4328, 45.9708],
+    "al haditha": [31.4572, 37.1451],
+    "arar": [30.9753, 41.0381],
+
+    "amman": [31.9539, 35.9106],
+    "aqaba": [29.5321, 35.0063],
+    "al omari": [31.4990, 38.1890],
+
+    "beirut": [33.8938, 35.5018],
+
+     "nuwieba": [29.0468, 34.6634],
+     "alexandria": [31.2001, 29.9187],
+      "cairo": [30.0444, 31.2357]
+};
+
+function getLocationCoordinates(locationName) {
+
+    if (!locationName) return null;
+
+    const key = locationName
+        .toString()
+        .trim()
+        .toLowerCase();
+
+    return locationCoordinates[key] || null;
+}
+    const origin =
+    getLocationCoordinates(shipment.origin) ||
+    [25.2048, 55.2708];
+
+const current =
+    getLocationCoordinates(shipment.current_location) ||
+    [24.1000, 51.7500];
+
+const destination =
+    getLocationCoordinates(shipment.destination) ||
+    [24.7136, 46.6753];
 
       async function getRoadRoute(start, end) {
 
