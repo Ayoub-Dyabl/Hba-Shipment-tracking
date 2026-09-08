@@ -2017,43 +2017,27 @@ L.marker(current, {
     icon: truckIcon
 })
     .addTo(window.hbaShipmentMap)
-    .bindPopup("Current Location: Al Sila");
+    .bindPopup(`Current Location: ${shipment.current_location || "Unknown"}`);
 
-// TRAVELED ROUTE - REAL ROAD
-let traveledRoad = [origin, current];
-
-try {
-    traveledRoad = await getRoadRoute(origin, current);
-} catch (error) {
-    console.error("Traveled road route failed:", error);
-}
-
+// TRAVELLED ROUTE
 L.polyline(
-    traveledRoad,
+    [origin, current],
     {
-        color: "#F58220",
+        color: "#FF8228",
         weight: 5
     }
 ).addTo(window.hbaShipmentMap);
 
-// REMAINING ROUTE - REAL ROAD
-let remainingRoad = [current, destination];
-
-try {
-    remainingRoad = await getRoadRoute(current, destination);
-} catch (error) {
-    console.error("Remaining road route failed:", error);
-}
-
+// REMAINING ROUTE
 L.polyline(
-    remainingRoad,
+    [current, destination],
     {
         color: "#9ca3af",
         weight: 4,
         dashArray: "10, 10"
     }
 ).addTo(window.hbaShipmentMap);
-
+      
 // FIT EVERYTHING INSIDE THE MAP
 window.hbaShipmentMap.fitBounds(
     [origin, current, destination],
