@@ -1861,7 +1861,7 @@ trackingResult.innerHTML = `
       
     `;
 
-    setTimeout(() => {
+    setTimeout(async () => {
 
     const mapBox = document.getElementById("shipmentMap");
 
@@ -1893,6 +1893,30 @@ const origin = [25.2048, 55.2708];
 const current = [24.1000, 51.7500];
 const destination = [24.7136, 46.6753];
 
+      async function getRoadRoute(start, end) {
+
+    const url =
+        `https://router.project-osrm.org/route/v1/driving/` +
+        `${start[1]},${start[0]};${end[1]},${end[0]}` +
+        `?overview=full&geometries=geojson`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error("Road route request failed");
+    }
+
+    const data = await response.json();
+
+    if (!data.routes || data.routes.length === 0) {
+        throw new Error("No road route found");
+    }
+
+    return data.routes[0].geometry.coordinates.map(
+        ([lng, lat]) => [lat, lng]
+    );
+}
+
 // ORIGIN MARKER
 L.marker(origin)
     .addTo(window.hbaShipmentMap)
@@ -1918,18 +1942,34 @@ L.marker(current, {
     .addTo(window.hbaShipmentMap)
     .bindPopup("Current Location: Al Sila");
 
-// TRAVELED ROUTE
+// TRAVELED ROUTE - REAL ROAD
+let traveledRoad = [origin, current];
+
+try {
+    traveledRoad = await getRoadRoute(origin, current);
+} catch (error) {
+    console.error("Traveled road route failed:", error);
+}
+
 L.polyline(
-    [origin, current],
+    traveledRoad,
     {
         color: "#F58220",
         weight: 5
     }
 ).addTo(window.hbaShipmentMap);
 
-// REMAINING ROUTE
+// REMAINING ROUTE - REAL ROAD
+let remainingRoad = [current, destination];
+
+try {
+    remainingRoad = await getRoadRoute(current, destination);
+} catch (error) {
+    console.error("Remaining road route failed:", error);
+}
+
 L.polyline(
-    [current, destination],
+    remainingRoad,
     {
         color: "#9ca3af",
         weight: 4,
