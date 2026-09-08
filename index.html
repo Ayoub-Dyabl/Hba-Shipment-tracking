@@ -1511,7 +1511,7 @@ footer {
       <h2>Track Your Shipment</h2>
 
    <div class="tracking-search">
-  <input
+    <input
     type="text"
     id="trackingNumber"
     placeholder="Enter HBA tracking number"
@@ -1888,7 +1888,9 @@ trackingResult.innerHTML = `
     ).addTo(window.hbaShipmentMap);
 
      // DYNAMIC SHIPMENT ROUTE
-
+const origin = [25.2048, 55.2708];
+const current = [24.1000, 51.7500];
+const destination = [24.7136, 46.6753];
 
       // ==============================
 // HBA LOCATION DATABASE
