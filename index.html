@@ -57,7 +57,8 @@
 .hero {
     width: 100%;
     min-height: 550px;
-    
+     aspect-ratio: 16 / 9;
+
     background:
         linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.25)),
         url("HBA.pgn.jpeg");
@@ -68,7 +69,7 @@
 
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     text-align: center;
 
     padding: 40px 20px;
@@ -76,24 +77,6 @@
     border: 0 !important;
 }
 
-   .hero-content {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    position: relative;
-}
-    
-    #services {
-    position: relative;
-    z-index: 1;
-    clear: both;
-}
-
-  #trackingResult {
-    position: relative;
-    z-index: 10;
-}  
-    
 #track {
     margin: 0 !important;
     padding-left: 0;
@@ -1357,122 +1340,8 @@ footer {
     margin-top: 0 !important;
     border-top: none !important;
 }
-
-    /* ===== HBA REAL MAP ===== */
-
-.shipment-map-wrap {
-    width: 100%;
-    margin-top: 20px;
-    background: #15171b;
-    border: 1px solid #34383f;
-    border-radius: 14px;
-    overflow: hidden;
-}
-
-.shipment-map-header {
-    padding: 14px 18px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 700;
-    border-bottom: 1px solid #34383f;
-}
-
-#shipmentMap {
-    width: 100%;
-    height: 380px;
-    z-index: 1;
-}
-
-.truck-map-icon {
-    background: transparent !important;
-    border: none !important;
-}
-
-.truck-map-marker {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #15171b;
-    border: 3px solid #f58220;
-    border-radius: 50%;
-    font-size: 23px;
-    box-shadow: 0 0 12px rgba(245,130,34,.8);
-}
-
-.map-location-label {
-    font-weight: 700;
-}
-
-@media (max-width: 700px) {
-    #shipmentMap {
-        height: 300px;
-    }
-}
-
-    #shipmentMap {
-    width: 100%;
-    height: 420px;
-    margin-top: 20px;
-    border-radius: 18px;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-}
-
-/* 🚛 TRUCK ICON */
-.truck-map-icon {
-    background: transparent !important;
-    border: none !important;
-    font-size: 32px;
-    line-height: 40px;
-    text-align: center;
-}
-
-/* MAP LOCATION POPUP / TOOLTIP */
-.map-location-label {
-    background: #111 !important;
-    color: #fff !important;
-    border: 1px solid #ff7a00 !important;
-    border-radius: 7px !important;
-    padding: 5px 9px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35) !important;
-    white-space: nowrap;
-}
-
-.map-location-label::before {
-    display: none !important;
-}
-
-    #trackShipmentBtn {
-    position: relative;
-    z-index: 50;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-}
-
-#trackingInput {
-    position: relative;
-    z-index: 50;
-    pointer-events: auto !important;
-}
-
-.tracking-input-wrap {
-    position: relative;
-    z-index: 50;
-}
     
   </style>
-
- <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
-/>
-
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   
 </head>
 
@@ -1487,7 +1356,7 @@ footer {
   <nav>
     <a href="#home">Home</a>
     <a href="#track">Track Shipment</a>
-    <a href="#" id="contactBtn">Contact</a>
+    <a href="#" id="contactLink">Contact</a>
   </nav>
 </header>
 
@@ -1588,26 +1457,19 @@ footer {
     <div class="tracking-box">
       <h2>Track Your Shipment</h2>
 
-  <!-- STEP 4 — MAKE SURE YOUR HTML IS EXACTLY THIS -->
-
-<div class="tracking-search">
-
-    <input
-        type="text"
-        id="trackingInput"
-        placeholder="HBA-2026-AX0001"
-    >
-
-    <button
+   <div class="tracking-search">
+  <input
+    type="text"
+    id="trackingNumber"
+    placeholder="Enter HBA tracking number"
+  >
+  <button
+    id="trackButton"
     type="button"
-    id="trackShipmentBtn"
-    onclick="window.location.href='?tracking=' + encodeURIComponent(document.getElementById('trackingInput').value.trim())"
 >
     TRACK SHIPMENT →
 </button>
-
 </div>
-      
       <div id="trackingResult"></div>
       
       </div>
@@ -1638,7 +1500,6 @@ footer {
 
 </footer>
   
- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
 <script>
@@ -1691,16 +1552,6 @@ if (trackingFromLink) {
     }
 
     const shipment = data[0];
-
-    const mapHTML = `
-    <div class="shipment-map-wrap">
-        <div class="shipment-map-header">
-            🗺️ Shipment Route
-        </div>
-
-        <div id="shipmentMap"></div>
-    </div>
-`;
 
     const companyInfo = {
     AX: { name: "ARAMEX", logo: "aramex.pgn.png" },
@@ -1900,7 +1751,6 @@ trackingResult.innerHTML = `
 
 </div>
  ${timelineHTML}
- ${mapHTML}
  ${delayedHTML}
  ${historyHTML}
  
@@ -1953,104 +1803,8 @@ trackingResult.innerHTML = `
       </div>
       
     `;
-
-    setTimeout(() => {
-
-    const mapBox = document.getElementById("shipmentMap");
-
-    if (!mapBox) {
-        console.error("MAP ERROR: shipmentMap not found");
-        return;
-    }
-
-    if (!window.L) {
-        mapBox.innerHTML = `
-            <div style="
-                padding:40px;
-                color:#ff5555;
-                text-align:center;
-                font-weight:700;
-            ">
-                MAP ERROR: Leaflet did not load
-            </div>
-        `;
-        return;
-    }
-
-    // Remove previous map if shipment is searched again
-    if (window.hbaMap) {
-        window.hbaMap.remove();
-        window.hbaMap = null;
-    }
-
-    // Create Middle East map
-    window.hbaMap = L.map("shipmentMap", {
-        center: [25.5, 45.5],
-        zoom: 4,
-        zoomControl: true
-    });
-
-    // Real OpenStreetMap layer
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution: "&copy; OpenStreetMap contributors"
-        }
-    ).addTo(window.hbaMap);
-
-      const originCoords = findHBALocation(shipment.origin);
-      const currentCoords = findHBALocation(shipment.current_location);
-      const destinationCoords = findHBALocation(shipment.destination);
-
-console.log("ORIGIN:", shipment.origin, originCoords);
-console.log("CURRENT:", shipment.current_location, currentCoords);
-console.log("DESTINATION:", shipment.destination, destinationCoords);
-
-const points = [];
-
-      const hbaLocations = {
-    "dubai": [25.2048, 55.2708],
-    "al sila": [24.0900, 51.7500],
-    "sila": [24.0900, 51.7500],
-    "riyadh": [24.7136, 46.6753],
-    "al batha": [24.1240, 51.5840],
-    "batha": [24.1240, 51.5840],
-    "abu dhabi": [24.4539, 54.3773],
-    "jebel ali": [24.9857, 55.0273]
-};
-
-function findHBALocation(name) {
-
-    if (!name) return null;
-
-    const cleanName = name
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, " ");
-
-    if (hbaLocations[cleanName]) {
-        return hbaLocations[cleanName];
-    }
-
-    for (const key in hbaLocations) {
-        if (cleanName.includes(key)) {
-            return hbaLocations[key];
-        }
-    }
-
-    return null;
-}
-
-
-    setTimeout(() => {
-        window.hbaMap.invalidateSize();
-    }, 300);
-
-}, 500);
-
   }
-  
+
   async function viewCustomerPOD(podPath) {
     const { data, error } = await db.storage
         .from("pod-files")
@@ -2078,14 +1832,12 @@ if (trackingFromLink) {
         trackShipment();
     });
 
-  trackingInput.addEventListener("keydown", function (event) {
-
-    if (event.key === "Enter") {
-        event.preventDefault();
-        trackShipmentBtn.click();
-    }
-
-});
+    trackingInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            trackShipment();
+        }
+    });
 
 });
 
@@ -2145,324 +1897,7 @@ function whatsappDriver(contact) {
     const number = contact.split(/\s*-\s*/)[0].replace(/\D/g, "");
     window.open("https://wa.me/" + number, "_blank");
 }
-
-let shipmentMap = null;
-let shipmentRouteLayers = [];
-
-/* =========================
-   LOCATION COORDINATES
-========================= */
-
-const locationCoordinates = {
-    "dubai": [25.2048, 55.2708],
-    "al sila": [24.0800, 51.7600],
-    "sila": [24.0800, 51.7600],
-    "riyadh": [24.7136, 46.6753]
-};
-
-
-/* =========================
-   GET LOCATION
-========================= */
-
-function getCoords(location) {
-
-    if (!location) return null;
-
-    const name = location
-        .toString()
-        .trim()
-        .toLowerCase();
-
-    return locationCoordinates[name] || null;
-}
-
-
-/* =========================
-   TRUCK ICON
-========================= */
-
-const shipmentTruckIcon = L.divIcon({
-    className: "truck-map-icon",
-
-    html: `
-        <div class="truck-marker-btn">
-            🚛
-        </div>
-    `,
-
-    iconSize: [46, 46],
-    iconAnchor: [23, 23],
-    popupAnchor: [0, -28]
-});
-
-/* =========================
-   CLEAR OLD ROUTE
-========================= */
-
-function clearShipmentRoute() {
-
-    if (!shipmentMap) return;
-
-    shipmentRouteLayers.forEach(layer => {
-        shipmentMap.removeLayer(layer);
-    });
-
-    shipmentRouteLayers = [];
-}
-
-
-/* =========================
-   DRAW SHIPMENT ROUTE
-========================= */
-
-function renderShipmentRoute(origin, currentLocation, destination) {
-
-    const mapElement = document.getElementById("shipmentMap");
-
-    if (!mapElement) {
-        console.error("shipmentMap not found");
-        return;
-    }
-
-
-    const originCoords = getCoords(origin);
-    const currentCoords = getCoords(currentLocation);
-    const destinationCoords = getCoords(destination);
-
-
-    console.log("SHIPMENT MAP:", {
-        origin,
-        originCoords,
-        currentLocation,
-        currentCoords,
-        destination,
-        destinationCoords
-    });
-
-
-    if (!originCoords || !currentCoords || !destinationCoords) {
-        console.error("One or more locations have no coordinates.");
-        return;
-    }
-
-
-    /* =========================
-       CREATE MAP
-    ========================= */
-
-    if (!shipmentMap) {
-
-        shipmentMap = L.map("shipmentMap");
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-                attribution: "&copy; OpenStreetMap"
-            }
-        ).addTo(shipmentMap);
-
-    } else {
-
-        clearShipmentRoute();
-
-    }
-
-
-    /* =========================
-       ORIGIN
-    ========================= */
-
-    const originMarker = L.circleMarker(originCoords, {
-        radius: 8,
-        color: "#ff6a00",
-        weight: 3,
-        fillColor: "#ff6a00",
-        fillOpacity: 1
-    })
-    .addTo(shipmentMap)
-    .bindTooltip(
-        "Origin: " + origin,
-        {
-            permanent: true,
-            direction: "top",
-            className: "map-location-label"
-        }
-    );
-
-    shipmentRouteLayers.push(originMarker);
-
-
-    /* =========================
-       TRAVELED ROUTE
-       ORIGIN → CURRENT
-    ========================= */
-
-    const traveledLine = L.polyline(
-        [
-            originCoords,
-            currentCoords
-        ],
-        {
-            color: "#ff6a00",
-            weight: 6,
-            opacity: 1,
-            lineCap: "round"
-        }
-    ).addTo(shipmentMap);
-
-    shipmentRouteLayers.push(traveledLine);
-
-
-    /* =========================
-       CURRENT LOCATION
-    ========================= */
-
-    const truckMarker = L.marker(
-    currentCoords,
-    {
-        icon: shipmentTruckIcon,
-        zIndexOffset: 5000,
-        interactive: true
-    }
-)
-.addTo(shipmentMap);
-
-
-/* CLICK TRUCK */
-truckMarker.on("click", function () {
-
-    truckMarker
-        .bindPopup(`
-            <div style="
-                min-width:170px;
-                font-family:Arial,sans-serif;
-            ">
-
-                <div style="
-                    font-size:14px;
-                    font-weight:700;
-                    margin-bottom:7px;
-                    color:#ff6a00;
-                ">
-                    🚛 Current Location
-                </div>
-
-                <div style="
-                    color:#222;
-                    font-size:13px;
-                ">
-                    ${currentLocation}
-                </div>
-
-            </div>
-        `)
-        .openPopup();
-
-});
-
-
-/* HOVER LABEL */
-truckMarker.bindTooltip(
-    currentLocation,
-    {
-        direction: "top",
-        offset: [0, -25],
-        className: "map-location-label"
-    }
-);
-
-
-shipmentRouteLayers.push(truckMarker);
-
-
-    /* =========================
-       REMAINING ROUTE
-       CURRENT → DESTINATION
-    ========================= */
-
-    const remainingLine = L.polyline(
-        [
-            currentCoords,
-            destinationCoords
-        ],
-        {
-            color: "#888888",
-            weight: 5,
-            opacity: 0.9,
-            dashArray: "12, 12"
-        }
-    ).addTo(shipmentMap);
-
-    shipmentRouteLayers.push(remainingLine);
-
-
-    /* =========================
-       DESTINATION
-    ========================= */
-
-    const destinationMarker = L.circleMarker(destinationCoords, {
-        radius: 8,
-        color: "#ffffff",
-        weight: 3,
-        fillColor: "#555555",
-        fillOpacity: 1
-    })
-    .addTo(shipmentMap)
-    .bindTooltip(
-        "Destination: " + destination,
-        {
-            permanent: true,
-            direction: "top",
-            className: "map-location-label"
-        }
-    );
-
-    shipmentRouteLayers.push(destinationMarker);
-
-
-    /* =========================
-       FIT ROUTE ON SCREEN
-    ========================= */
-
-    const bounds = L.latLngBounds([
-        originCoords,
-        currentCoords,
-        destinationCoords
-    ]);
-
-    shipmentMap.fitBounds(bounds, {
-        padding: [60, 60]
-    });
-
-
-    setTimeout(() => {
-        shipmentMap.invalidateSize();
-
-        shipmentMap.fitBounds(bounds, {
-            padding: [60, 60]
-        });
-
-    }, 300);
-}
-
-
-/* =========================
-   TEST
-   DUBAI → AL SILA → RIYADH
-========================= */
-
-setTimeout(() => {
-
-    renderShipmentRoute(
-        "Dubai",
-        "Al Sila",
-        "Riyadh"
-    );
-
-}, 500);
-
+  
 </script>
 
 <!-- SERVICES & CONTACT -->
@@ -2536,14 +1971,14 @@ setTimeout(() => {
             </p>
         </div>
 
-       <div class="team-card">
-            <img src="mohamad-al-khalid.jpg.webp" alt="Mohamad Al Khalid">
-            <h3>Mohamad Al Khalid</h3>
+        <div class="team-card">
+            <img src="marwan-bashir.jpg.webp" alt="Marwan Bashir">
+            <h3>Marwan Bashir</h3>
             <div class="team-line"></div>
-            <h4>Logistics Expert</h4>
+            <h4>Operation Manager</h4>
             <p>
-                Optimizing every movement for speed, cost,
-                and reliability through deep industry expertise.
+                Ensuring precision, clarity, and performance across every
+                operational insight and decision.
             </p>
         </div>
 
@@ -2559,13 +1994,13 @@ setTimeout(() => {
         </div>
 
         <div class="team-card">
-            <img src="marwan-bashir.jpg.webp" alt="Marwan Bashir">
-            <h3>Marwan Bashir</h3>
+            <img src="mohamad-al-khalid.jpg.webp" alt="Mohamad Al Khalid">
+            <h3>Mohamad Al Khalid</h3>
             <div class="team-line"></div>
-            <h4>Operation Manager</h4>
+            <h4>Logistics Expert</h4>
             <p>
-                Ensuring precision, clarity, and performance across every
-                operational insight and decision.
+                Optimizing every movement for speed, cost,
+                and reliability through deep industry expertise.
             </p>
         </div>
 
@@ -2632,31 +2067,5 @@ setTimeout(() => {
 
 </section>
 
-  <script>
-    
-document.addEventListener("DOMContentLoaded", function () {
-
-    const trackingInput = document.getElementById("trackingInput");
-    const trackShipmentBtn = document.getElementById("trackShipmentBtn");
-
-    trackShipmentBtn.addEventListener("click", function () {
-
-        const trackingNumber = trackingInput.value.trim();
-
-        if (trackingNumber === "") {
-            return;
-        }
-
-        window.location.href =
-            window.location.pathname +
-            "?tracking=" +
-            encodeURIComponent(trackingNumber);
-
-    });
-
-});
-</script>
-  
-  
 </body>
 </html>
