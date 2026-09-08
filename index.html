@@ -2019,18 +2019,34 @@ L.marker(current, {
     .addTo(window.hbaShipmentMap)
     .bindPopup(`Current Location: ${shipment.current_location || "Unknown"}`);
 
-// TRAVELLED ROUTE
+// TRAVELLED ROUTE - REAL ROAD
+let traveledRoad = [origin, current];
+
+try {
+    traveledRoad = await getRoadRoute(origin, current);
+} catch (error) {
+    console.error("Traveled road route failed:", error);
+}
+
 L.polyline(
-    [origin, current],
+    traveledRoad,
     {
         color: "#FF8228",
         weight: 5
     }
 ).addTo(window.hbaShipmentMap);
+      
+// REMAINING ROUTE - REAL ROAD
+let remainingRoad = [current, destination];
 
-// REMAINING ROUTE
+try {
+    remainingRoad = await getRoadRoute(current, destination);
+} catch (error) {
+    console.error("Remaining road route failed:", error);
+}
+
 L.polyline(
-    [current, destination],
+    remainingRoad,
     {
         color: "#9ca3af",
         weight: 4,
