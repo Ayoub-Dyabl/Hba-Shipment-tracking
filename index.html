@@ -1487,7 +1487,7 @@ footer {
   <nav>
     <a href="#home">Home</a>
     <a href="#track">Track Shipment</a>
-    <a href="#" id="contactLink">Contact</a>
+    <a href="#" id="contactBtn">Contact</a>
   </nav>
 </header>
 
@@ -1591,19 +1591,20 @@ footer {
   <!-- STEP 4 — MAKE SURE YOUR HTML IS EXACTLY THIS -->
 
 <div class="tracking-search">
+
     <input
         type="text"
         id="trackingInput"
-        placeholder="Enter tracking number"
-        autocomplete="off"
+        placeholder="HBA-2026-AX0001"
     >
 
     <button
         type="button"
         id="trackShipmentBtn"
     >
-        TRACK SHIPMENT
+        TRACK SHIPMENT →
     </button>
+
 </div>
       
       <div id="trackingResult"></div>
@@ -2698,6 +2699,31 @@ trackingInput.addEventListener("keydown", function (event) {
 });
 
 </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const trackingInput = document.getElementById("trackingInput");
+    const trackShipmentBtn = document.getElementById("trackShipmentBtn");
+
+    trackShipmentBtn.addEventListener("click", function () {
+
+        const trackingNumber = trackingInput.value.trim();
+
+        if (trackingNumber === "") {
+            return;
+        }
+
+        window.location.href =
+            window.location.pathname +
+            "?tracking=" +
+            encodeURIComponent(trackingNumber);
+
+    });
+
+});
+</script>
+  
   
 </body>
 </html>
