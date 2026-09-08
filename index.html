@@ -2144,17 +2144,7 @@ function whatsappDriver(contact) {
     const number = contact.split(/\s*-\s*/)[0].replace(/\D/g, "");
     window.open("https://wa.me/" + number, "_blank");
 }
-<!-- STEP 2:
-     YOUR CSS + LEAFLET LINKS ARE CORRECT ✅
 
-     NOW GO TO THE VERY BOTTOM OF index.html
-     JUST BEFORE </body>
-
-     DELETE THE OLD TEST MAP JAVASCRIPT ONLY
-     AND PASTE THIS:
--->
-
-<script>
 let shipmentMap = null;
 let shipmentRouteLayers = [];
 
@@ -2642,65 +2632,7 @@ setTimeout(() => {
 </section>
 
   <script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const trackingInput = document.getElementById("trackingInput");
-const trackShipmentBtn = document.getElementById("trackShipmentBtn");
-
-trackShipmentBtn.addEventListener("click", function () {
-    const trackingNumber = trackingInput.value.trim();
-
-    if (!trackingNumber) {
-        alert("Please enter a tracking number.");
-        return;
-    }
-
-    console.log("Tracking:", trackingNumber);
-
-    trackShipment(trackingNumber);
-});
-
-trackingInput.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        trackShipmentBtn.click();
-    }
-});
-
-
-        console.log("Tracking shipment:", trackingNumber);
-
-
-        // OPEN SAME PAGE WITH TRACKING NUMBER
-        const newUrl =
-            window.location.pathname +
-            "?tracking=" +
-            encodeURIComponent(trackingNumber);
-
-        window.location.href = newUrl;
-
-    });
-
-
-    // PRESS ENTER
-    trackingInput.addEventListener("keydown", function (event) {
-
-        if (event.key === "Enter") {
-
-            event.preventDefault();
-
-            trackBtn.click();
-
-        }
-
-    });
-
-});
-
-</script>
-
-  <script>
+    
 document.addEventListener("DOMContentLoaded", function () {
 
     const trackingInput = document.getElementById("trackingInput");
