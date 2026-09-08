@@ -1887,6 +1887,64 @@ trackingResult.innerHTML = `
         }
     ).addTo(window.hbaShipmentMap);
 
+      // TEST ROUTE: Dubai → Al Sila → Riyadh
+
+const origin = [25.2048, 55.2708];
+const current = [24.1000, 51.7500];
+const destination = [24.7136, 46.6753];
+
+// ORIGIN MARKER
+L.marker(origin)
+    .addTo(window.hbaShipmentMap)
+    .bindPopup("Origin: Dubai");
+
+// DESTINATION MARKER
+L.marker(destination)
+    .addTo(window.hbaShipmentMap)
+    .bindPopup("Destination: Riyadh");
+
+// TRUCK ICON
+const truckIcon = L.divIcon({
+    html: "🚛",
+    className: "",
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
+});
+
+// CURRENT LOCATION
+L.marker(current, {
+    icon: truckIcon
+})
+    .addTo(window.hbaShipmentMap)
+    .bindPopup("Current Location: Al Sila");
+
+// TRAVELED ROUTE
+L.polyline(
+    [origin, current],
+    {
+        color: "#F58220",
+        weight: 5
+    }
+).addTo(window.hbaShipmentMap);
+
+// REMAINING ROUTE
+L.polyline(
+    [current, destination],
+    {
+        color: "#9ca3af",
+        weight: 4,
+        dashArray: "10, 10"
+    }
+).addTo(window.hbaShipmentMap);
+
+// FIT EVERYTHING INSIDE THE MAP
+window.hbaShipmentMap.fitBounds(
+    [origin, current, destination],
+    {
+        padding: [40, 40]
+    }
+);
+
 }, 100);
     
   }
