@@ -214,18 +214,7 @@
   text-align: left;
 }
 
- #trackingResult {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-
-    width: min(92vw, 650px) !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-
-    z-index: 99999 !important;
-    margin: 0 !important;
+.tracking-result {
     background: #15171b !important;
     color: #ffffff;
     border: 1px solid #2d3036;
@@ -1354,60 +1343,6 @@ footer {
     border-top: none !important;
 }
 
-    #trackingResult {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-
-    width: min(92vw, 650px) !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-
-    z-index: 99999 !important;
-    margin: 0 !important;
-}
-
-    #trackingResult {
-    position: fixed !important;
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-    max-height: none !important;
-
-    margin: 0 !important;
-    padding: 20px !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    transform: none !important;
-
-    overflow: hidden !important;
-
-    z-index: 999999 !important;
-
-    background: transparent !important;
-    border: none !important;
-
-    pointer-events: none !important;
-
-    box-sizing: border-box !important;
-}
-
-#trackingResult > div {
-    width: min(92vw, 650px) !important;
-    max-height: 90vh !important;
-
-    margin: 0 !important;
-
-    overflow-y: auto !important;
-
-    pointer-events: auto !important;
-}
-    
   </style>
   
 </head>
@@ -1538,13 +1473,13 @@ footer {
 </button>
 </div>
       
+<div id="trackingResult"></div>    
+      
       </div>
     </div>
 
   </div>
 </section>
-  
-<div id="trackingResult"></div>
   
 <footer class="site-footer">
 
@@ -1871,8 +1806,6 @@ trackingResult.innerHTML = `
       </div>
       
     `;
-    
-    document.body.style.overflow = "hidden";
   }
 
   async function viewCustomerPOD(podPath) {
@@ -2136,28 +2069,6 @@ function whatsappDriver(contact) {
     </div>
 
 </section>
-
-<script>  
-document.addEventListener("DOMContentLoaded", function () {
-
-    const shipmentResult = document.getElementById("trackingResult");
-
-    if (!shipmentResult) return;
-
-    document.documentElement.appendChild(shipmentResult);
-
-    shipmentResult.style.position = "fixed";
-    shipmentResult.style.top = "50%";
-    shipmentResult.style.left = "50%";
-    shipmentResult.style.transform = "translate(-50%, -50%)";
-    shipmentResult.style.width = "min(92vw, 650px)";
-    shipmentResult.style.maxHeight = "90vh";
-    shipmentResult.style.overflowY = "auto";
-    shipmentResult.style.zIndex = "999999";
-    shipmentResult.style.margin = "0";
-
-});
-</script>
 
 </body>
 </html>
