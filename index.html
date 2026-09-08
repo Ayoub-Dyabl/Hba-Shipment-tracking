@@ -1892,30 +1892,6 @@ const origin = [25.2048, 55.2708];
 const current = [24.1000, 51.7500];
 const destination = [24.7136, 46.6753];
 
-
-function getLocationCoordinates(locationName) {
-
-    if (!locationName) return null;
-
-    const key = locationName
-        .toString()
-        .trim()
-        .toLowerCase();
-
-    return locationCoordinates[key] || null;
-}
-    const origin =
-    getLocationCoordinates(shipment.origin) ||
-    [25.2048, 55.2708];
-
-const current =
-    getLocationCoordinates(shipment.current_location) ||
-    [24.1000, 51.7500];
-
-const destination =
-    getLocationCoordinates(shipment.destination) ||
-    [24.7136, 46.6753];
-
       async function getRoadRoute(start, end) {
 
     const url =
