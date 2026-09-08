@@ -1599,11 +1599,12 @@ footer {
     >
 
     <button
-        type="button"
-        id="trackShipmentBtn"
-    >
-        TRACK SHIPMENT →
-    </button>
+    type="button"
+    id="trackShipmentBtn"
+    onclick="window.location.href='?tracking=' + encodeURIComponent(document.getElementById('trackingInput').value.trim())"
+>
+    TRACK SHIPMENT →
+</button>
 
 </div>
       
