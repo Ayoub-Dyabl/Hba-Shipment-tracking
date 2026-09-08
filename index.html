@@ -2019,15 +2019,43 @@ L.marker(current, {
     .addTo(window.hbaShipmentMap)
     .bindPopup(`Current Location: ${shipment.current_location || "Unknown"}`);
 
-// TRAVELLED ROUTE - REAL ROAD
-let traveledRoad = [origin, current];
+// ======================================
+// ONE REAL ROAD: ORIGIN -> DESTINATION
+// THEN SPLIT AT CURRENT LOCATION
+// ======================================
+
+let fullRoad = [origin, current, destination];
 
 try {
-    traveledRoad = await getRoadRoute(origin, current);
+    fullRoad = await getRoadRoute(origin, destination);
 } catch (error) {
-    console.error("Traveled road route failed:", error);
+    console.error("Full road route failed:", error);
 }
 
+// Find the point on the real road closest to current location
+let closestIndex = 0;
+let closestDistance = Infinity;
+
+fullRoad.forEach((point, index) => {
+
+    const latDiff = point[0] - current[0];
+    const lngDiff = point[1] - current[1];
+
+    const distance =
+        (latDiff * latDiff) +
+        (lngDiff * lngDiff);
+
+    if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+    }
+});
+
+// Split SAME road into traveled + remaining
+const traveledRoad = fullRoad.slice(0, closestIndex + 1);
+const remainingRoad = fullRoad.slice(closestIndex);
+
+// ORANGE - TRAVELED
 L.polyline(
     traveledRoad,
     {
@@ -2035,16 +2063,8 @@ L.polyline(
         weight: 5
     }
 ).addTo(window.hbaShipmentMap);
-      
-// REMAINING ROUTE - REAL ROAD
-let remainingRoad = [current, destination];
 
-try {
-    remainingRoad = await getRoadRoute(current, destination);
-} catch (error) {
-    console.error("Remaining road route failed:", error);
-}
-
+// GREY DASHED - REMAINING
 L.polyline(
     remainingRoad,
     {
