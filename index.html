@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HBA Transport Shipment Tracking</title>
   <link rel="icon" type="image/webp" href="logo.webp">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     * {
@@ -1365,6 +1368,18 @@ footer {
     box-sizing: border-box !important;
 } 
 
+    /* SHIPMENT MAP */
+
+#shipmentMap {
+    width: 100%;
+    height: 360px;
+    margin-top: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
   </style>
   
 </head>
@@ -1824,10 +1839,42 @@ trackingResult.innerHTML = `
   </div>
 
 </div>
+
+<div id="shipmentMap"></div>
+
      ${podHTML}
       </div>
       
     `;
+
+    setTimeout(() => {
+
+    const mapBox = document.getElementById("shipmentMap");
+
+    if (!mapBox || typeof L === "undefined") {
+        console.error("Shipment map or Leaflet not found");
+        return;
+    }
+
+    if (window.hbaShipmentMap) {
+        window.hbaShipmentMap.remove();
+    }
+
+    window.hbaShipmentMap = L.map("shipmentMap").setView(
+        [24.7136, 46.6753],
+        5
+    );
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(window.hbaShipmentMap);
+
+}, 100);
+    
   }
 
   async function viewCustomerPOD(podPath) {
