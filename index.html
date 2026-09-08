@@ -2013,7 +2013,7 @@ const truckIcon = L.divIcon({
 });
 
 // CURRENT LOCATION
-L.marker(current, {
+const currentMarker = L.marker(current, {
     icon: truckIcon
 })
     .addTo(window.hbaShipmentMap)
@@ -2054,6 +2054,11 @@ fullRoad.forEach((point, index) => {
 // Split SAME road into traveled + remaining
 const traveledRoad = fullRoad.slice(0, closestIndex + 1);
 const remainingRoad = fullRoad.slice(closestIndex);
+
+      // SNAP TRUCK TO THE REAL ROAD
+const currentOnRoad = fullRoad[closestIndex];
+
+currentMarker.setLatLng(currentOnRoad);
 
 // ORANGE - TRAVELED
 L.polyline(
