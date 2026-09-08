@@ -1367,6 +1367,46 @@ footer {
     z-index: 99999 !important;
     margin: 0 !important;
 }
+
+    #trackingResult {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 20px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    transform: none !important;
+
+    overflow: hidden !important;
+
+    z-index: 999999 !important;
+
+    background: transparent !important;
+    border: none !important;
+
+    pointer-events: none !important;
+
+    box-sizing: border-box !important;
+}
+
+#trackingResult > div {
+    width: min(92vw, 650px) !important;
+    max-height: 90vh !important;
+
+    margin: 0 !important;
+
+    overflow-y: auto !important;
+
+    pointer-events: auto !important;
+}
     
   </style>
   
@@ -2095,14 +2135,24 @@ function whatsappDriver(contact) {
 
 </section>
 
-  <script>
+<script>  
 document.addEventListener("DOMContentLoaded", function () {
 
     const shipmentResult = document.getElementById("trackingResult");
 
-    if (shipmentResult) {
-        document.body.appendChild(shipmentResult);
-    }
+    if (!shipmentResult) return;
+
+    document.documentElement.appendChild(shipmentResult);
+
+    shipmentResult.style.position = "fixed";
+    shipmentResult.style.top = "50%";
+    shipmentResult.style.left = "50%";
+    shipmentResult.style.transform = "translate(-50%, -50%)";
+    shipmentResult.style.width = "min(92vw, 650px)";
+    shipmentResult.style.maxHeight = "90vh";
+    shipmentResult.style.overflowY = "auto";
+    shipmentResult.style.zIndex = "999999";
+    shipmentResult.style.margin = "0";
 
 });
 </script>
