@@ -1499,11 +1499,11 @@ footer {
    <div class="tracking-search">
     <input
     type="text"
-    id="trackingNumber"
+    id="trackingInput"
     placeholder="Enter HBA tracking number"
   >
   <button
-    id="trackButton"
+    id="trackShipmentBtn"
     type="button"
 >
     TRACK SHIPMENT →
@@ -1964,9 +1964,9 @@ if (trackingFromLink) {
 
   document.addEventListener("DOMContentLoaded", function () {
 
-    const trackingInput = document.getElementById("trackingNumber");
-    const trackButton = document.getElementById("trackButton");
-
+   const trackingInput = document.getElementById("trackingInput");
+   const trackButton = document.getElementById("trackShipmentBtn");
+    
     trackButton.addEventListener("click", function () {
         trackShipment();
     });
