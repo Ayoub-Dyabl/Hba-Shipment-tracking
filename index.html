@@ -1368,18 +1368,6 @@ footer {
     box-sizing: border-box !important;
 } 
 
-    /* SHIPMENT MAP */
-
-#shipmentMap {
-    width: 100%;
-    height: 360px;
-    margin-top: 20px;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-}
-
     /* ALLOW TRACKING SECTION TO GROW WITH RESULT + MAP */
 
 #track.hero {
@@ -1854,42 +1842,12 @@ trackingResult.innerHTML = `
 
 </div>
 
-<div id="shipmentMap"></div>
 
      ${podHTML}
       </div>
       
     `;
 
-    setTimeout(async () => {
-
-    const mapBox = document.getElementById("shipmentMap");
-
-    if (!mapBox || typeof L === "undefined") {
-        console.error("Shipment map or Leaflet not found");
-        return;
-    }
-
-    if (window.hbaShipmentMap) {
-        window.hbaShipmentMap.remove();
-    }
-
-    window.hbaShipmentMap = L.map("shipmentMap").setView(
-        [24.7136, 46.6753],
-        5
-    );
-
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution: "&copy; OpenStreetMap contributors"
-        }
-    ).addTo(window.hbaShipmentMap);
-
-     // DYNAMIC SHIPMENT ROUTE
-const origin = [25.2048, 55.2708];
-const currentLocationMap = {
 
     // UAE
     "dubai": [25.2048, 55.2708],
@@ -1994,102 +1952,7 @@ const current =
     );
 }
 
-// ORIGIN MARKER
-L.marker(origin)
-    .addTo(window.hbaShipmentMap)
-    .bindPopup("Origin: Dubai");
 
-// DESTINATION MARKER
-L.marker(destination)
-    .addTo(window.hbaShipmentMap)
-    .bindPopup("Destination: Riyadh");
-
-// TRUCK ICON
-const truckIcon = L.divIcon({
-    html: "🚛",
-    className: "",
-    iconSize: [36, 36],
-    iconAnchor: [18, 18]
-});
-
-// CURRENT LOCATION
-const currentMarker = L.marker(current, {
-    icon: truckIcon
-})
-    .addTo(window.hbaShipmentMap)
-    .bindPopup(`Current Location: ${shipment.current_location || "Unknown"}`);
-
-// ======================================
-// ONE REAL ROAD: ORIGIN -> DESTINATION
-// THEN SPLIT AT CURRENT LOCATION
-// ======================================
-
-let fullRoad = [origin, current, destination];
-
-try {
-    fullRoad = await getRoadRoute(origin, destination);
-} catch (error) {
-    console.error("Full road route failed:", error);
-}
-
-// Find the point on the real road closest to current location
-let closestIndex = 0;
-let closestDistance = Infinity;
-
-fullRoad.forEach((point, index) => {
-
-    const latDiff = point[0] - current[0];
-    const lngDiff = point[1] - current[1];
-
-    const distance =
-        (latDiff * latDiff) +
-        (lngDiff * lngDiff);
-
-    if (distance < closestDistance) {
-        closestDistance = distance;
-        closestIndex = index;
-    }
-});
-
-// Split SAME road into traveled + remaining
-const traveledRoad = fullRoad.slice(0, closestIndex + 1);
-const remainingRoad = fullRoad.slice(closestIndex);
-
-      // SNAP TRUCK TO THE REAL ROAD
-const currentOnRoad = fullRoad[closestIndex];
-
-currentMarker.setLatLng(currentOnRoad);
-
-// ORANGE - TRAVELED
-L.polyline(
-    traveledRoad,
-    {
-        color: "#FF8228",
-        weight: 5
-    }
-).addTo(window.hbaShipmentMap);
-
-// GREY DASHED - REMAINING
-L.polyline(
-    remainingRoad,
-    {
-        color: "#9ca3af",
-        weight: 4,
-        dashArray: "10, 10"
-    }
-).addTo(window.hbaShipmentMap);
-      
-// FIT EVERYTHING INSIDE THE MAP
-window.hbaShipmentMap.fitBounds(
-    [origin, current, destination],
-    {
-        padding: [40, 40]
-    }
-);
-
-}, 100);
-    
-  }
 
   async function viewCustomerPOD(podPath) {
     const { data, error } = await db.storage
@@ -2125,7 +1988,6 @@ if (trackingFromLink) {
         }
     });
 
-});
 
   const contactLink = document.getElementById("contactLink");
 const contactModal = document.getElementById("contactModal");
